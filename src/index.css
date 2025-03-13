@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -13,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 222.2 47.4% 11.2%;
+    --primary: 196 85% 53%;
     --primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
@@ -22,7 +23,7 @@
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
-    --accent: 210 40% 96.1%;
+    --accent: 196 85% 53%;
     --accent-foreground: 222.2 47.4% 11.2%;
 
     --destructive: 0 84.2% 60.2%;
@@ -30,24 +31,17 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 196 85% 53%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -96,6 +90,86 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-dashboard-background text-dashboard-text-body font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply text-dashboard-text-heading font-medium tracking-tight;
+  }
+}
+
+/* Glass effect styles */
+.glass {
+  @apply bg-white bg-opacity-70 backdrop-blur-lg border border-white border-opacity-20;
+}
+
+/* Transition styles */
+.transition-all {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400;
+}
+
+/* Font loading */
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display'), local('SFProDisplay-Regular');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: local('SF Pro Display Medium'), local('SFProDisplay-Medium');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Dashboard specific components */
+@layer components {
+  .dashboard-container {
+    @apply max-w-[1440px] mx-auto px-6 py-8;
+  }
+  
+  .dashboard-section {
+    @apply mb-10;
+  }
+  
+  .dashboard-card {
+    @apply bg-dashboard-card rounded-xl shadow-card hover:shadow-card-hover transition-all p-6;
+  }
+  
+  .dashboard-kpi-card {
+    @apply dashboard-card flex flex-col h-full;
+  }
+  
+  .dashboard-section-title {
+    @apply text-xl font-medium mb-6 text-dashboard-text-heading;
+  }
+  
+  .dashboard-section-subtitle {
+    @apply text-sm font-medium uppercase tracking-wider text-dashboard-text-body opacity-70 mb-3;
+  }
+  
+  .dashboard-chip {
+    @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-800;
   }
 }
