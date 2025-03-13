@@ -1,4 +1,5 @@
 
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -104,8 +105,8 @@
 }
 
 /* Transition styles */
-.transition-all {
-  @apply transition-all duration-300 ease-in-out;
+.custom-transition {
+  transition: all 300ms ease-in-out;
 }
 
 /* Custom scrollbar */
@@ -154,7 +155,7 @@
   }
   
   .dashboard-card {
-    @apply bg-dashboard-card rounded-xl shadow-card hover:shadow-card-hover transition-all p-6;
+    @apply bg-dashboard-card rounded-xl shadow-card hover:shadow-card-hover p-6;
   }
   
   .dashboard-kpi-card {
@@ -173,3 +174,4 @@
     @apply inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium bg-gray-100 text-gray-800;
   }
 }
+
