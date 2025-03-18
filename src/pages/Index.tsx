@@ -5,6 +5,7 @@ import KpiCard from '../components/dashboard/KpiCard';
 import ConversationAnalysis from '../components/dashboard/ConversationAnalysis';
 import ProductPerformance from '../components/dashboard/ProductPerformance';
 import UserBehavior from '../components/dashboard/UserBehavior';
+import ChatBot from '../components/dashboard/ChatBot';
 import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
 
 const Index = () => {
@@ -99,6 +100,9 @@ const Index = () => {
           <p>Powered by ACME AI • Version 1.0</p>
         </footer>
       </main>
+      
+      {/* AI Chat Bot */}
+      <ChatBot />
     </div>
   );
 };
