@@ -1,8 +1,9 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, SendIcon, XIcon } from 'lucide-react';
+import { useChatTranscript } from '@/hooks/useChatTranscript';
+import { toast } from "@/components/ui/sonner";
 
 // Define message types
 interface Message {
@@ -117,6 +118,18 @@ const ChatBot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
+  // Add chat transcript functionality
+  const { sessionId, saveChat, isLoading, error } = useChatTranscript();
+  
+  // Show error toast if transcript saving fails
+  useEffect(() => {
+    if (error) {
+      toast.error("Failed to save chat transcript", {
+        description: error
+      });
+    }
+  }, [error]);
+  
   // Auto scroll to bottom of messages
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -152,6 +165,14 @@ const ChatBot = () => {
     
     setMessages(prev => [...prev, botMessage]);
     setIsTyping(false);
+    
+    // Save the conversation to the database
+    const fullTranscript = `User: ${inputValue}\nAI: ${response}`;
+    saveChat(fullTranscript, {
+      user_query: inputValue,
+      ai_response: response,
+      session_start_time: messages[0].timestamp.toISOString()
+    });
   };
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
@@ -236,7 +257,7 @@ const ChatBot = () => {
               onClick={handleSendMessage} 
               size="icon" 
               className="h-10 w-10"
-              disabled={isTyping || !inputValue.trim()}
+              disabled={isTyping || !inputValue.trim() || isLoading}
             >
               <SendIcon size={18} />
             </Button>
