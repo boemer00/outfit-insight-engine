@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, SendIcon, XIcon } from 'lucide-react';
 import { useChatTranscript } from '@/hooks/useChatTranscript';
-import { toast } from "@/components/ui/sonner";
+import { toast } from "sonner";
 
 // Define message types
 interface Message {
