@@ -1,69 +1,92 @@
-# Welcome to your Lovable project
 
-## Project info
+# Outfit Insight Engine
 
-**URL**: https://lovable.dev/projects/adddc3b5-fa30-4c39-8928-12f36c260814
+A data analytics dashboard with an AI-powered chatbot for fashion retail insights.
 
-## How can I edit this code?
+## Project Structure
 
-There are several ways of editing your application.
+This project is organized with a clear separation of frontend and backend components:
 
-**Use Lovable**
+```
+/backend/
+  /migrations/         - Database schema and migration files
+  /supabase/           - Supabase client and utility functions
+  /api/                - API services and data access functions
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/adddc3b5-fa30-4c39-8928-12f36c260814) and start prompting.
+/frontend/
+  /components/         - UI components including the chatbot
+  /dashboard/          - Main dashboard interface components
+  /hooks/              - Custom React hooks
 
-Changes made via Lovable will be committed automatically to this repo.
+/supabase/
+  /functions/          - Supabase Edge Functions
+```
 
-**Use your preferred IDE**
+## Getting Started
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- Node.js (v16 or higher)
+- npm (v7 or higher)
+- Supabase account for the backend
 
-Follow these steps:
+### Setup
+
+1. Clone the repository
+```sh
+git clone <repository-url>
+cd outfit-insight-engine
+```
+
+2. Install dependencies
+```sh
+npm install
+```
+
+3. Set up environment variables
+   - Copy `.env.example` to `.env`
+   - Fill in your Supabase connection details
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+cp .env.example .env
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+4. Run migrations on your Supabase project
+   - Navigate to your Supabase Dashboard
+   - Go to the SQL Editor
+   - Execute the SQL migrations found in `/backend/migrations/`
 
-# Step 3: Install the necessary dependencies.
-npm i
-
-# Step 4: Start the development server with auto-reloading and an instant preview.
+5. Start the development server
+```sh
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Backend Setup
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+### Supabase Configuration
 
-**Use GitHub Codespaces**
+1. Create a Supabase project at [https://supabase.com](https://supabase.com)
+2. Set up the required tables using the migration file at `/backend/migrations/01_create_chat_transcripts.sql`
+3. Enable Row Level Security (RLS) with appropriate policies
+4. Configure Edge Functions in your Supabase project
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Frontend Development
 
-## What technologies are used for this project?
+The frontend is built with React, TypeScript, and Tailwind CSS, providing a responsive dashboard with visualization components and an AI chatbot.
 
-This project is built with .
+### Key Components
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- **Dashboard**: Displays KPIs, charts, and analytics
+- **ChatBot**: Allows users to query the data using natural language
+- **Data Visualization**: Uses Recharts to visualize analytics data
 
-## How can I deploy this project?
+## Edge Functions
 
-Simply open [Lovable](https://lovable.dev/projects/adddc3b5-fa30-4c39-8928-12f36c260814) and click on Share -> Publish.
+This project uses Supabase Edge Functions for secure database access:
 
-## I want to use a custom domain - is that possible?
+- `save-transcript`: Stores chat conversations securely
+- `get-transcripts`: Retrieves conversation history with flexible filtering
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
