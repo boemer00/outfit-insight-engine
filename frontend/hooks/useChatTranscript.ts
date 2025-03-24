@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from 'react';
-import { getOrCreateSessionId } from '@/backend/supabase/sessionUtils';
+import { getOrCreateSessionId } from '../backend/supabase/sessionUtils';
 import { supabase } from '@/integrations/supabase/client';
 
 /**
