@@ -1,8 +1,8 @@
 
 import { useState, useEffect } from 'react';
-import { getOrCreateSessionId } from '../backend/supabase/sessionUtils';
-import { saveTranscript } from '../backend/api/transcriptService';
-import type { ChatTranscript } from '../backend/supabase/supabaseClient';
+import { getOrCreateSessionId } from '../../backend/supabase/sessionUtils';
+import { saveTranscript } from '../../backend/api/transcriptService';
+import type { ChatTranscript } from '../../backend/supabase/supabaseClient';
 import { supabase } from '@/integrations/supabase/client';
 
 /**
