@@ -1,5 +1,5 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
 import Header from '../components/layout/Header';
 import KpiCard from '../components/dashboard/KpiCard';
 import ConversationAnalysis from '../components/dashboard/ConversationAnalysis';
@@ -7,15 +7,8 @@ import ProductPerformance from '../components/dashboard/ProductPerformance';
 import UserBehavior from '../components/dashboard/UserBehavior';
 import ChatBot from '../components/dashboard/ChatBot';
 import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
-import { getSessionId } from '@/lib/sessionUtils';
 
 const Index = () => {
-  // Ensure session ID is set when the application loads
-  useEffect(() => {
-    const sessionId = getSessionId();
-    console.log('Current session ID:', sessionId);
-  }, []);
-
   // Mock data for KPI cards
   const kpiData = [
     {

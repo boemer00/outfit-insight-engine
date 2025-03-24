@@ -3,8 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MessageCircle, SendIcon, XIcon } from 'lucide-react';
-import { saveTranscript } from '@/lib/transcriptService';
-import { getSessionId } from '@/lib/sessionUtils';
 
 // Define message types
 interface Message {
@@ -118,12 +116,6 @@ const ChatBot = () => {
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const [sessionId, setSessionId] = useState<string>('');
-  
-  // Initialize session ID on component mount
-  useEffect(() => {
-    setSessionId(getSessionId());
-  }, []);
   
   // Auto scroll to bottom of messages
   useEffect(() => {
@@ -143,45 +135,23 @@ const ChatBot = () => {
       timestamp: new Date()
     };
     
-    const newMessages = [...messages, userMessage];
-    setMessages(newMessages);
+    setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
     
-    try {
-      // Save user message to Supabase
-      await saveTranscript(inputValue, {
-        type: 'user_message',
-        session_id: sessionId,
-        timestamp: new Date().toISOString()
-      });
-      
-      // Get AI response
-      const response = await getAIResponse(inputValue);
-      
-      // Add AI response message
-      const botMessage: Message = {
-        id: (Date.now() + 1).toString(),
-        content: response,
-        sender: 'bot',
-        timestamp: new Date()
-      };
-      
-      const updatedMessages = [...newMessages, botMessage];
-      setMessages(updatedMessages);
-      
-      // Save bot response to Supabase
-      await saveTranscript(response, {
-        type: 'bot_response',
-        session_id: sessionId,
-        user_query: inputValue,
-        timestamp: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Error during chat interaction:', error);
-    } finally {
-      setIsTyping(false);
-    }
+    // Get AI response
+    const response = await getAIResponse(inputValue);
+    
+    // Add AI response message
+    const botMessage: Message = {
+      id: (Date.now() + 1).toString(),
+      content: response,
+      sender: 'bot',
+      timestamp: new Date()
+    };
+    
+    setMessages(prev => [...prev, botMessage]);
+    setIsTyping(false);
   };
   
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
