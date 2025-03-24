@@ -70,9 +70,21 @@ npm run dev
 3. Enable Row Level Security (RLS) with appropriate policies
 4. Configure Edge Functions in your Supabase project
 
+### Backend Directory Structure
+
+- `/backend/migrations/` - Contains SQL migration files for database schema
+- `/backend/supabase/` - Contains Supabase client initialization and utility functions
+- `/backend/api/` - Contains service functions for data access
+
 ## Frontend Development
 
 The frontend is built with React, TypeScript, and Tailwind CSS, providing a responsive dashboard with visualization components and an AI chatbot.
+
+### Frontend Directory Structure
+
+- `/frontend/dashboard/` - Main dashboard interface components
+- `/frontend/components/` - Reusable UI components including the chatbot
+- `/frontend/hooks/` - Custom React hooks for frontend functionality
 
 ### Key Components
 
