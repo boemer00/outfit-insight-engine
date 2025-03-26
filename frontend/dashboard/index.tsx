@@ -19,11 +19,11 @@ const Dashboard = () => {
     const handleResize = () => {
       const width = window.innerWidth;
       setScreenWidth(width);
-      console.log('Screen width:', width, '- Desktop layout (5 cards in a row)');
+      console.log('Screen width:', width, '- Using grid-flow-col layout for KPI cards');
     };
     
     // Log initial screen size
-    console.log('Initial screen width:', screenWidth, '- Desktop layout (5 cards in a row)');
+    console.log('Initial screen width:', screenWidth, '- Using grid-flow-col layout for KPI cards');
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -89,7 +89,7 @@ const Dashboard = () => {
 
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-5 gap-6">
+          <div className="grid grid-rows-1 grid-flow-col auto-cols-fr gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard
                 key={index}
