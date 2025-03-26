@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Search, LayoutDashboard, Settings, ChevronDown } from 'lucide-react';
+import { Search, LayoutDashboard, BarChart2, User, Settings, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Header = () => {
@@ -19,6 +19,8 @@ const Header = () => {
             <nav className="hidden md:flex items-center space-x-1">
               {[
                 { name: 'Dashboard', icon: <LayoutDashboard size={16} /> },
+                { name: 'Generate & Pin', icon: <BarChart2 size={16} /> },
+                { name: 'User Behavior', icon: <User size={16} /> },
                 { name: 'Settings', icon: <Settings size={16} /> }
               ].map((item) => (
                 <button

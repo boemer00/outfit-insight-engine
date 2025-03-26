@@ -6,8 +6,7 @@ import ConversationAnalysis from '@/components/dashboard/ConversationAnalysis';
 import UserBehavior from '@/components/dashboard/UserBehavior';
 import ChatBot from '../components/ChatBot';
 import GraphGenerator from '../components/GraphGenerator';
-import ProductPerformance from '@/components/dashboard/ProductPerformance';
-import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat, PercentIcon } from 'lucide-react';
+import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Dashboard = () => {
@@ -56,15 +55,6 @@ const Dashboard = () => {
       icon: <Repeat size={18} />,
       sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 10 + Math.floor(Math.random() * 30) })),
       formatter: (v) => v.toString() + '%'
-    },
-    {
-      title: 'Overall Return Rate',
-      value: 13.3,
-      change: -1.5,
-      trend: 'down' as const,
-      icon: <PercentIcon size={18} />,
-      // Removing sparklineData so it just shows the number
-      formatter: (v) => v.toString() + '%'
     }
   ];
 
@@ -74,14 +64,14 @@ const Dashboard = () => {
       
       <main className="dashboard-container pb-20">
         {/* Dashboard Title */}
-        <div className="mb-6 mt-4">
-          <h1 className="text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
-          <p className="text-dashboard-text-body mt-1">Insights and analytics for your AI-driven fashion recommendations</p>
+        <div className="mb-8 mt-4 animate-fade-in">
+          <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
+          <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p>
         </div>
         
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard 
                 key={index}
@@ -96,9 +86,6 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-        
-        {/* Product Performance Table */}
-        <ProductPerformance />
         
         {/* Tabs for Dashboard Sections */}
         <div className="mt-8 animate-fade-in">
