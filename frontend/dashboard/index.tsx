@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/layout/Header';
 import KpiCard from '@/components/dashboard/KpiCard';
@@ -91,12 +90,11 @@ const Dashboard = () => {
         {/* Dashboard Title */}
         <div className="mb-8 mt-4 animate-fade-in">
           <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">KPI Cards</h1>
-          {/* <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p> */}
         </div>
 
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 md:grid-cols-5 gap-6">
+          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-5'} gap-6`}>
             {kpiData.map((kpi, index) => (
               <KpiCard
                 key={index}
