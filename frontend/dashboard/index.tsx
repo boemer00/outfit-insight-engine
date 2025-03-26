@@ -89,7 +89,7 @@ const Dashboard = () => {
         
         {/* Tabs for Dashboard Sections */}
         <div className="mt-8 animate-fade-in">
-          <Tabs defaultValue="overview" className="w-full">
+          <Tabs defaultValue="generate-pin" className="w-full">
             <TabsList className="mb-6 bg-white dark:bg-gray-800 p-1 rounded-lg">
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="generate-pin">Generate & Pin</TabsTrigger>

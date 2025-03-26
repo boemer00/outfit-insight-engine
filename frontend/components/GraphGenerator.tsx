@@ -9,7 +9,6 @@ import { PlusCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase } from '@/integrations/supabase/client';
 
 // Types for our graphs
 interface GraphData {
@@ -30,78 +29,51 @@ interface GraphData {
 
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
+// Function to get pinned graphs from localStorage
+const getPinnedGraphs = (): GraphData[] => {
+  try {
+    const storedGraphs = localStorage.getItem('pinnedGraphs');
+    return storedGraphs ? JSON.parse(storedGraphs) : [];
+  } catch (error) {
+    console.error('Error parsing pinned graphs:', error);
+    return [];
+  }
+};
+
+// Function to save pinned graphs to localStorage
+const savePinnedGraphs = (graphs: GraphData[]) => {
+  localStorage.setItem('pinnedGraphs', JSON.stringify(graphs));
+};
+
 const GraphGenerator = () => {
-  const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>([]);
+  const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>(getPinnedGraphs());
   const [isLoading, setIsLoading] = useState(false);
 
-  // Load pinned graphs on component mount
+  // Listen for pinned graph updates from other components
   useEffect(() => {
-    const loadPinnedGraphs = async () => {
-      setIsLoading(true);
-      try {
-        // This is a mock implementation - in a real app, you'd fetch from an API
-        // You can implement the actual Supabase fetching here when ready
-        
-        // Mock data for demo purposes
-        const mockPinnedGraphs: GraphData[] = [
-          {
-            id: '1',
-            title: 'Return Rates for Polo Shirts',
-            description: 'Return rates for polo shirts over the last 7 days',
-            type: 'bar',
-            data: [
-              { day: 'Mon', rate: 5.2 },
-              { day: 'Tue', rate: 4.8 },
-              { day: 'Wed', rate: 6.1 },
-              { day: 'Thu', rate: 5.7 },
-              { day: 'Fri', rate: 4.9 },
-              { day: 'Sat', rate: 3.8 },
-              { day: 'Sun', rate: 3.2 },
-            ],
-            config: {
-              xKey: 'day',
-              yKey: 'rate',
-              colors: [COLORS[0]]
-            },
-            query: 'Show me the return rates for polo shirts over the last 7 days',
-            createdAt: new Date()
-          },
-          {
-            id: '2',
-            title: 'Sales by Category',
-            description: 'Distribution of sales across product categories',
-            type: 'pie',
-            data: [
-              { name: 'Shirts', value: 35 },
-              { name: 'Pants', value: 25 },
-              { name: 'Dresses', value: 20 },
-              { name: 'Accessories', value: 15 },
-              { name: 'Shoes', value: 5 },
-            ],
-            config: {
-              dataKey: 'value',
-              colors: COLORS
-            },
-            query: 'Show me sales distribution by product category',
-            createdAt: new Date()
-          }
-        ];
-        
-        setPinnedGraphs(mockPinnedGraphs);
-      } catch (error) {
-        console.error('Error loading pinned graphs:', error);
-        toast.error('Failed to load pinned graphs');
-      } finally {
-        setIsLoading(false);
-      }
+    const handlePinnedGraphsUpdated = () => {
+      setPinnedGraphs(getPinnedGraphs());
     };
-    
-    loadPinnedGraphs();
+
+    // Load pinned graphs on component mount
+    handlePinnedGraphsUpdated();
+
+    // Add event listener for pinned graphs updates
+    window.addEventListener('pinnedGraphsUpdated', handlePinnedGraphsUpdated);
+
+    return () => {
+      window.removeEventListener('pinnedGraphsUpdated', handlePinnedGraphsUpdated);
+    };
   }, []);
   
   const handleRemoveGraph = (id: string) => {
-    // In a real app, you'd also remove it from the database
-    setPinnedGraphs(prev => prev.filter(graph => graph.id !== id));
+    // Update local state
+    const updatedGraphs = pinnedGraphs.filter(graph => graph.id !== id);
+    setPinnedGraphs(updatedGraphs);
+    
+    // Update localStorage
+    savePinnedGraphs(updatedGraphs);
+    
     toast.success('Graph removed successfully');
   };
   
@@ -158,7 +130,7 @@ const GraphGenerator = () => {
                 {graph.data.map((entry, index) => (
                   <Cell 
                     key={`cell-${index}`} 
-                    fill={graph.config.colors?.[index % (graph.config.colors.length || 1)] || COLORS[index % COLORS.length]} 
+                    fill={graph.config.colors?.[index % (graph.config.colors?.length || 1)] || COLORS[index % COLORS.length]} 
                   />
                 ))}
               </Pie>

@@ -272,6 +272,19 @@ const GraphRenderer = ({ graph }: { graph: GraphData }) => {
   }
 };
 
+// Function to save pinned graphs to localStorage
+const savePinnedGraphs = (graphs: GraphData[]) => {
+  localStorage.setItem('pinnedGraphs', JSON.stringify(graphs));
+  // Trigger an event to notify other components
+  window.dispatchEvent(new CustomEvent('pinnedGraphsUpdated'));
+};
+
+// Function to get pinned graphs from localStorage
+const getPinnedGraphs = (): GraphData[] => {
+  const storedGraphs = localStorage.getItem('pinnedGraphs');
+  return storedGraphs ? JSON.parse(storedGraphs) : [];
+};
+
 const ChatBot = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -285,7 +298,7 @@ const ChatBot = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-  const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>([]);
+  const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>(getPinnedGraphs());
   const messagesEndRef = useRef<HTMLDivElement>(null);
   
   // Add chat transcript functionality
@@ -357,13 +370,12 @@ const ChatBot = () => {
   };
   
   const handlePinGraph = (graph: GraphData) => {
-    // In a real app, this would save to Supabase or another backend
-    setPinnedGraphs(prev => [...prev, graph]);
+    // Update local state
+    const updatedPinnedGraphs = [...pinnedGraphs, graph];
+    setPinnedGraphs(updatedPinnedGraphs);
     
-    // Save to localStorage as fallback/demo
-    const storedGraphs = localStorage.getItem('pinnedGraphs');
-    const parsedGraphs = storedGraphs ? JSON.parse(storedGraphs) : [];
-    localStorage.setItem('pinnedGraphs', JSON.stringify([...parsedGraphs, graph]));
+    // Save to localStorage and trigger event
+    savePinnedGraphs(updatedPinnedGraphs);
     
     toast.success('Graph pinned to dashboard', {
       description: 'You can view it in the "Generate & Pin" tab'
