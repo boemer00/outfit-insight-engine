@@ -63,15 +63,15 @@ const Dashboard = () => {
       <Header />
       
       <main className="dashboard-container pb-20">
-        {/* Dashboard Title */}
-        <div className="mb-8 mt-4 animate-fade-in">
-          <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
-          <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p>
+        {/* Dashboard Title - Reverted to original styling */}
+        <div className="mb-6 mt-4">
+          <h1 className="text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
+          <p className="text-dashboard-text-body mt-1">Insights and analytics for your AI-driven fashion recommendations</p>
         </div>
         
-        {/* KPI Cards */}
-        <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        {/* KPI Cards - Reverted to original styling */}
+        <div className="dashboard-section mb-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {kpiData.map((kpi, index) => (
               <KpiCard 
                 key={index}
