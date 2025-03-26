@@ -66,8 +66,8 @@ const Dashboard = () => {
       <main className="dashboard-container pb-20">
         {/* Dashboard Title */}
         <div className="mb-8 mt-4 animate-fade-in">
-          <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
-          <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p>
+          <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">KPI Cards</h1>
+          {/* <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p> */}
         </div>
 
         {/* KPI Cards */}

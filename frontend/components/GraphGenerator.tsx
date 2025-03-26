@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { 
-  BarChart, Bar, LineChart, Line, PieChart, Pie, 
+import {
+  BarChart, Bar, LineChart, Line, PieChart, Pie,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 import { PlusCircle, Trash2 } from 'lucide-react';
@@ -41,7 +41,7 @@ const GraphGenerator = () => {
       try {
         // This is a mock implementation - in a real app, you'd fetch from an API
         // You can implement the actual Supabase fetching here when ready
-        
+
         // Mock data for demo purposes
         const mockPinnedGraphs: GraphData[] = [
           {
@@ -68,25 +68,25 @@ const GraphGenerator = () => {
           },
           {
             id: '2',
-            title: 'Sales by Category',
-            description: 'Distribution of sales across product categories',
+            title: 'Returns by Category',
+            description: 'Distribution of returns across product categories',
             type: 'pie',
             data: [
               { name: 'Shirts', value: 35 },
-              { name: 'Pants', value: 25 },
-              { name: 'Dresses', value: 20 },
-              { name: 'Accessories', value: 15 },
-              { name: 'Shoes', value: 5 },
+              { name: 'Trousers', value: 25 },
+              { name: 'Hoodies', value: 20 },
+              { name: 'Polo Shirts', value: 15 },
+              { name: 'Jackets', value: 5 },
             ],
             config: {
               dataKey: 'value',
               colors: COLORS
             },
-            query: 'Show me sales distribution by product category',
+            query: 'Show me returns by product category',
             createdAt: new Date()
           }
         ];
-        
+
         setPinnedGraphs(mockPinnedGraphs);
       } catch (error) {
         console.error('Error loading pinned graphs:', error);
@@ -95,16 +95,16 @@ const GraphGenerator = () => {
         setIsLoading(false);
       }
     };
-    
+
     loadPinnedGraphs();
   }, []);
-  
+
   const handleRemoveGraph = (id: string) => {
     // In a real app, you'd also remove it from the database
     setPinnedGraphs(prev => prev.filter(graph => graph.id !== id));
     toast.success('Graph removed successfully');
   };
-  
+
   // Function to render the appropriate chart type
   const renderGraph = (graph: GraphData) => {
     switch (graph.type) {
@@ -121,7 +121,7 @@ const GraphGenerator = () => {
             </BarChart>
           </ResponsiveContainer>
         );
-        
+
       case 'line':
         return (
           <ResponsiveContainer width="100%" height={300}>
@@ -131,16 +131,16 @@ const GraphGenerator = () => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey={graph.config.yKey} 
-                stroke={graph.config.colors?.[0] || COLORS[0]} 
-                activeDot={{ r: 8 }} 
+              <Line
+                type="monotone"
+                dataKey={graph.config.yKey}
+                stroke={graph.config.colors?.[0] || COLORS[0]}
+                activeDot={{ r: 8 }}
               />
             </LineChart>
           </ResponsiveContainer>
         );
-        
+
       case 'pie':
         return (
           <ResponsiveContainer width="100%" height={300}>
@@ -156,9 +156,9 @@ const GraphGenerator = () => {
                 dataKey={graph.config.dataKey}
               >
                 {graph.data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={graph.config.colors?.[index % (graph.config.colors.length || 1)] || COLORS[index % COLORS.length]} 
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={graph.config.colors?.[index % (graph.config.colors.length || 1)] || COLORS[index % COLORS.length]}
                   />
                 ))}
               </Pie>
@@ -166,12 +166,12 @@ const GraphGenerator = () => {
             </PieChart>
           </ResponsiveContainer>
         );
-        
+
       default:
         return <p>Unsupported graph type</p>;
     }
   };
-  
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -185,20 +185,20 @@ const GraphGenerator = () => {
           </p>
         </div>
       </div>
-      
+
       <div className="flex flex-col gap-6">
         <p className="text-dashboard-text-body">
-          Ask the AI assistant questions like <span className="font-medium">"Show me return rates for polo shirts over the last 7 days"</span> to 
+          Ask the AI assistant questions like <span className="font-medium">"Show me return rates for polo shirts over the last 7 days"</span> to
           generate graphs. When a graph is generated, you can pin it to this dashboard.
         </p>
-        
+
         {pinnedGraphs.length === 0 ? (
           <Card className="border-dashed border-2 p-6">
             <div className="flex flex-col items-center justify-center py-12 text-center">
               <PlusCircle className="h-12 w-12 text-gray-300 mb-4" />
               <h3 className="text-lg font-medium text-dashboard-text-heading mb-2">No pinned graphs yet</h3>
               <p className="text-dashboard-text-body max-w-md">
-                Use the AI chatbot to ask questions about your data. 
+                Use the AI chatbot to ask questions about your data.
                 When a graph is generated, click "Pin to Dashboard" to save it here.
               </p>
             </div>
@@ -213,10 +213,10 @@ const GraphGenerator = () => {
                       <CardTitle>{graph.title}</CardTitle>
                       <CardDescription>{graph.description}</CardDescription>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
-                      className="text-gray-400 hover:text-red-500" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="text-gray-400 hover:text-red-500"
                       onClick={() => handleRemoveGraph(graph.id)}
                     >
                       <Trash2 className="h-4 w-4" />

@@ -6,8 +6,8 @@ import { MessageCircle, SendIcon, XIcon, BarChart2, PinIcon } from 'lucide-react
 import { useChatTranscript } from '../hooks/useChatTranscript';
 import { toast } from "sonner";
 import { v4 as uuidv4 } from 'uuid';
-import { 
-  BarChart, Bar, LineChart, Line, PieChart, Pie, 
+import {
+  BarChart, Bar, LineChart, Line, PieChart, Pie,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 
@@ -40,30 +40,22 @@ interface GraphData {
 // Sample responses for simulated AI
 const sampleResponses = [
   {
-    query: "have customers asked for any product that we don't offer?",
-    response: "Yes, 35% of users regularly ask for jeans. These customers have primarily purchased M-size products. Would you like more details?"
+    query: "Are there any products with high return rates this week?",
+    response: "Yes, slim-fit jeans in M-size have a return rate of 28%, versus an average of 15%. Should I check what are the common reasons for returns?"
   },
   {
-    query: "yes please",
-    response: "Our analysis shows that most requests are for slim-fit jeans in medium wash. The average price point users expect is $65-85. These customers typically purchase tops from our casual collection, suggesting they're looking to complete outfits."
+    query: "Yes, please.",
+    response: "Sure! The most common reason is Did not fit (40%). Customers often mention being too tight around the waist. Should I break down by customer demographics?"
   },
   {
-    query: "what categories drive the most engagement?",
-    response: "Formal wear drives the highest engagement with an average of 5.2 messages per conversation. Users spend 25% more time discussing formal items compared to casual wear, and request more styling advice for these products."
-  },
-  {
-    query: "what products have low conversion rates?",
-    response: "Our data shows that graphic t-shirts have a 12% lower conversion rate than other product types. Users frequently mention concerns about quality and fit accuracy. Would you like recommendations to improve this?"
-  },
-  {
-    query: "which product features do customers ask about most often?",
-    response: "Material composition is mentioned in 48% of conversations, followed by sizing accuracy (42%) and care instructions (29%). Customers considering higher-priced items are 3x more likely to ask detailed questions about materials."
+    query: "No, thank you.",
+    response: "Alright! 😊 Let me know if you'd to explore anything else."
   }
 ];
 
 // Keywords that indicate graph generation requests
 const graphKeywords = [
-  'show me', 'graph', 'chart', 'visualize', 'visualization', 'plot', 
+  'show me', 'graph', 'chart', 'visualize', 'visualization', 'plot',
   'display', 'trend', 'compare', 'comparison', 'over time', 'return rate',
   'sales'
 ];
@@ -136,18 +128,18 @@ const sampleGraphs = {
 const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData | null }> => {
   // Convert query to lowercase for easier matching
   const lowerQuery = query.toLowerCase().trim();
-  
+
   // Check if query seems to be asking for a visualization
   const shouldGenerateGraph = graphKeywords.some(keyword => lowerQuery.includes(keyword.toLowerCase()));
-  
+
   // Look for an exact match in our sample responses
-  const exactMatch = sampleResponses.find(item => 
+  const exactMatch = sampleResponses.find(item =>
     item.query.toLowerCase() === lowerQuery
   );
-  
+
   let responseText = '';
   let graphData: GraphData | null = null;
-  
+
   if (exactMatch) {
     responseText = exactMatch.response;
   }
@@ -156,11 +148,11 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
     if (lowerQuery.includes('polo') && (lowerQuery.includes('return') || lowerQuery.includes('rate'))) {
       graphData = { ...sampleGraphs.returnRates, query };
       responseText = "Here's a visualization of return rates for polo shirts over the last 7 days. The highest return rate was on Wednesday at 6.1%.";
-    } 
+    }
     else if (lowerQuery.includes('category') || lowerQuery.includes('distribution')) {
       graphData = { ...sampleGraphs.salesByCategory, query };
       responseText = "Here's the sales distribution by product category. Shirts make up the largest portion at 35% of total sales.";
-    } 
+    }
     else if (lowerQuery.includes('trend') || lowerQuery.includes('over time') || lowerQuery.includes('weekly')) {
       graphData = { ...sampleGraphs.salesTrend, query };
       responseText = "Here's the sales trend for polo shirts over the last month. We saw a peak in week 3 with 156 units sold.";
@@ -172,24 +164,24 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
   // Look for keyword matches if no exact match
   else if (lowerQuery.includes("jeans") || lowerQuery.includes("product") || lowerQuery.includes("offer")) {
     responseText = sampleResponses[0].response;
-  } 
+  }
   else if (lowerQuery.includes("detail") || lowerQuery.includes("more") || lowerQuery.includes("yes")) {
     responseText = sampleResponses[1].response;
-  } 
+  }
   else if (lowerQuery.includes("engagement") || lowerQuery.includes("interact")) {
     responseText = sampleResponses[2].response;
-  } 
+  }
   else if (lowerQuery.includes("conversion") || lowerQuery.includes("rate") || lowerQuery.includes("low")) {
     responseText = sampleResponses[3].response;
-  } 
+  }
   else if (lowerQuery.includes("feature") || lowerQuery.includes("ask") || lowerQuery.includes("question")) {
     responseText = sampleResponses[4].response;
-  } 
+  }
   else {
     // Default response if no match
     responseText = "I don't have specific data on that query. Try asking about product requests, engagement metrics, conversion rates, or common customer questions. You can also ask me to visualize data like 'Show me return rates for polo shirts'.";
   }
-  
+
   return new Promise(resolve => {
     setTimeout(() => {
       resolve({ text: responseText, graph: graphData });
@@ -200,7 +192,7 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
 // Component to render the appropriate chart type
 const GraphRenderer = ({ graph }: { graph: GraphData }) => {
   if (!graph) return null;
-  
+
   switch (graph.type) {
     case 'bar':
       return (
@@ -217,7 +209,7 @@ const GraphRenderer = ({ graph }: { graph: GraphData }) => {
           </ResponsiveContainer>
         </div>
       );
-      
+
     case 'line':
       return (
         <div className="h-64 w-full my-4">
@@ -228,17 +220,17 @@ const GraphRenderer = ({ graph }: { graph: GraphData }) => {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line 
-                type="monotone" 
-                dataKey={graph.config.yKey} 
-                stroke={graph.config.colors?.[0]} 
-                activeDot={{ r: 8 }} 
+              <Line
+                type="monotone"
+                dataKey={graph.config.yKey}
+                stroke={graph.config.colors?.[0]}
+                activeDot={{ r: 8 }}
               />
             </LineChart>
           </ResponsiveContainer>
         </div>
       );
-      
+
     case 'pie':
       return (
         <div className="h-64 w-full my-4">
@@ -255,9 +247,9 @@ const GraphRenderer = ({ graph }: { graph: GraphData }) => {
                 dataKey={graph.config.dataKey}
               >
                 {graph.data.map((entry, index) => (
-                  <Cell 
-                    key={`cell-${index}`} 
-                    fill={graph.config.colors?.[index % (graph.config.colors?.length || 1)]} 
+                  <Cell
+                    key={`cell-${index}`}
+                    fill={graph.config.colors?.[index % (graph.config.colors?.length || 1)]}
                   />
                 ))}
               </Pie>
@@ -266,7 +258,7 @@ const GraphRenderer = ({ graph }: { graph: GraphData }) => {
           </ResponsiveContainer>
         </div>
       );
-      
+
     default:
       return <p>Unsupported graph type</p>;
   }
@@ -287,10 +279,10 @@ const ChatBot = () => {
   const [isTyping, setIsTyping] = useState(false);
   const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  
+
   // Add chat transcript functionality
   const { sessionId, saveChat, isLoading, error } = useChatTranscript();
-  
+
   // Show error toast if transcript saving fails
   useEffect(() => {
     if (error) {
@@ -299,17 +291,17 @@ const ChatBot = () => {
       });
     }
   }, [error]);
-  
+
   // Auto scroll to bottom of messages
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
     }
   }, [messages]);
-  
+
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
-    
+
     // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -318,14 +310,14 @@ const ChatBot = () => {
       timestamp: new Date(),
       graph: null
     };
-    
+
     setMessages(prev => [...prev, userMessage]);
     setInputValue('');
     setIsTyping(true);
-    
+
     // Get AI response
     const { text: response, graph } = await getAIResponse(inputValue);
-    
+
     // Add AI response message
     const botMessage: Message = {
       id: (Date.now() + 1).toString(),
@@ -334,10 +326,10 @@ const ChatBot = () => {
       timestamp: new Date(),
       graph
     };
-    
+
     setMessages(prev => [...prev, botMessage]);
     setIsTyping(false);
-    
+
     // Save the conversation to the database
     const fullTranscript = `User: ${inputValue}\nAI: ${response}`;
     saveChat(fullTranscript, {
@@ -348,34 +340,34 @@ const ChatBot = () => {
       session_start_time: messages[0].timestamp.toISOString()
     });
   };
-  
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
     }
   };
-  
+
   const handlePinGraph = (graph: GraphData) => {
     // In a real app, this would save to Supabase or another backend
     setPinnedGraphs(prev => [...prev, graph]);
-    
+
     // Save to localStorage as fallback/demo
     const storedGraphs = localStorage.getItem('pinnedGraphs');
     const parsedGraphs = storedGraphs ? JSON.parse(storedGraphs) : [];
     localStorage.setItem('pinnedGraphs', JSON.stringify([...parsedGraphs, graph]));
-    
+
     toast.success('Graph pinned to dashboard', {
       description: 'You can view it in the "Generate & Pin" tab'
     });
   };
-  
+
   const suggestionPrompts = [
     "Show me return rates for polo shirts over the last 7 days",
     "What's the sales distribution by product category?",
     "Show me the weekly sales trend for polo shirts"
   ];
-  
+
   return (
     <>
       {/* Chat toggle button */}
@@ -387,7 +379,7 @@ const ChatBot = () => {
           {isOpen ? <XIcon size={24} /> : <MessageCircle size={24} />}
         </Button>
       </div>
-      
+
       {/* Chat window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-96 lg:w-[450px] h-[600px] bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 overflow-hidden animate-in slide-in-from-bottom">
@@ -398,40 +390,40 @@ const ChatBot = () => {
                 Visualization Demo
               </span>
             </div>
-            <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="text-white hover:bg-primary/90"
               onClick={() => setIsOpen(false)}
             >
               <XIcon size={18} />
             </Button>
           </div>
-          
+
           {/* Messages area */}
           <div className="flex-1 p-4 overflow-y-auto">
             {messages.map((message) => (
-              <div 
-                key={message.id} 
+              <div
+                key={message.id}
                 className={`mb-4 max-w-[90%] ${message.sender === 'user' ? 'ml-auto' : 'mr-auto'}`}
               >
-                <div 
+                <div
                   className={`p-3 rounded-lg ${
-                    message.sender === 'user' 
-                      ? 'bg-primary text-white rounded-tr-none' 
+                    message.sender === 'user'
+                      ? 'bg-primary text-white rounded-tr-none'
                       : 'bg-gray-100 dark:bg-gray-800 rounded-tl-none'
                   }`}
                 >
                   {message.content}
-                  
+
                   {/* Render graph if available */}
                   {message.graph && (
                     <div className="mt-3">
                       <div className="mb-2 flex justify-between items-center">
                         <h4 className="text-sm font-medium">{message.graph.title}</h4>
-                        <Button 
-                          variant="ghost" 
-                          size="sm" 
+                        <Button
+                          variant="ghost"
+                          size="sm"
                           className="h-7 gap-1 text-xs"
                           onClick={() => handlePinGraph(message.graph!)}
                         >
@@ -450,7 +442,7 @@ const ChatBot = () => {
                 </div>
               </div>
             ))}
-            
+
             {isTyping && (
               <div className="flex items-center space-x-2 mb-4">
                 <div className="w-2 h-2 rounded-full bg-gray-300 animate-bounce" style={{ animationDelay: '0ms' }}></div>
@@ -458,10 +450,10 @@ const ChatBot = () => {
                 <div className="w-2 h-2 rounded-full bg-gray-300 animate-bounce" style={{ animationDelay: '300ms' }}></div>
               </div>
             )}
-            
+
             <div ref={messagesEndRef} />
           </div>
-          
+
           {/* Suggestion chips */}
           {messages.length <= 2 && (
             <div className="px-4 py-2 flex flex-wrap gap-2">
@@ -478,7 +470,7 @@ const ChatBot = () => {
               ))}
             </div>
           )}
-          
+
           {/* Input area */}
           <div className="p-3 border-t border-gray-200 dark:border-gray-800 flex items-end gap-2">
             <Textarea
@@ -488,9 +480,9 @@ const ChatBot = () => {
               placeholder="Ask about your data or 'Show me...' for visualizations..."
               className="min-h-[60px] resize-none flex-1"
             />
-            <Button 
-              onClick={handleSendMessage} 
-              size="icon" 
+            <Button
+              onClick={handleSendMessage}
+              size="icon"
               className="h-10 w-10"
               disabled={isTyping || !inputValue.trim() || isLoading}
             >
