@@ -63,13 +63,13 @@ const Dashboard = () => {
       <Header />
       
       <main className="dashboard-container pb-20">
-        {/* Dashboard Title - Reverted to original styling */}
+        {/* Dashboard Title */}
         <div className="mb-6 mt-4">
           <h1 className="text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
           <p className="text-dashboard-text-body mt-1">Insights and analytics for your AI-driven fashion recommendations</p>
         </div>
         
-        {/* KPI Cards - Reverted to original styling */}
+        {/* KPI Cards - Updated to match screenshot */}
         <div className="dashboard-section mb-8">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
             {kpiData.map((kpi, index) => (

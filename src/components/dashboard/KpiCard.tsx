@@ -26,40 +26,38 @@ const KpiCard: React.FC<KpiCardProps> = ({
   formatter = (v) => v.toString(),
 }) => {
   return (
-    <div className="dashboard-kpi-card h-[130px] bg-white rounded-lg p-4 shadow-sm">
-      <div className="flex items-start justify-between mb-1">
-        <h3 className="text-sm font-medium text-dashboard-text-body">{title}</h3>
-        {icon && <div className="text-dashboard-accent">{icon}</div>}
+    <div className="bg-white rounded-lg shadow-sm p-4">
+      <div className="flex items-start mb-2">
+        <h3 className="text-sm text-dashboard-text-body font-medium">{title}</h3>
+        {icon && <div className="ml-auto text-dashboard-accent">{icon}</div>}
       </div>
       
-      <div className="flex-1 flex flex-col">
-        <div className="mb-1">
-          <span className="text-2xl font-medium text-dashboard-text-heading">
-            {formatter(value)}
-          </span>
-          
-          {change !== undefined && (
-            <span 
-              className={cn(
-                "ml-2 inline-flex items-center text-xs font-medium",
-                trend === 'up' ? "text-green-500" : 
-                trend === 'down' ? "text-red-500" : 
-                "text-gray-500"
-              )}
-            >
-              {trend === 'up' && <ArrowUpRight size={12} className="mr-0.5" />}
-              {trend === 'down' && <ArrowDownRight size={12} className="mr-0.5" />}
-              {change > 0 ? '+' : ''}{change}%
-            </span>
-          )}
-        </div>
+      <div className="mb-1">
+        <span className="text-2xl font-medium text-dashboard-text-heading">
+          {formatter(value)}
+        </span>
         
-        {sparklineData && (
-          <div className="mt-auto">
-            <SparklineChart data={sparklineData} color={sparklineColor} />
-          </div>
+        {change !== undefined && (
+          <span 
+            className={cn(
+              "ml-2 inline-flex items-center text-xs font-medium",
+              trend === 'up' ? "text-green-500" : 
+              trend === 'down' ? "text-red-500" : 
+              "text-gray-500"
+            )}
+          >
+            {trend === 'up' && <ArrowUpRight size={12} className="mr-0.5" />}
+            {trend === 'down' && <ArrowDownRight size={12} className="mr-0.5" />}
+            {change > 0 ? '+' : ''}{change}%
+          </span>
         )}
       </div>
+      
+      {sparklineData && (
+        <div className="h-16 mt-2">
+          <SparklineChart data={sparklineData} color={sparklineColor} />
+        </div>
+      )}
     </div>
   );
 };
