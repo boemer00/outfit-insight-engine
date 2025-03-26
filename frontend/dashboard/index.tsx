@@ -72,7 +72,7 @@ const Dashboard = () => {
 
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 sm:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 gap-6 w-full">
+          <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-5 gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard
                 key={index}
