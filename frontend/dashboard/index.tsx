@@ -6,7 +6,8 @@ import ConversationAnalysis from '@/components/dashboard/ConversationAnalysis';
 import UserBehavior from '@/components/dashboard/UserBehavior';
 import ChatBot from '../components/ChatBot';
 import GraphGenerator from '../components/GraphGenerator';
-import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
+import ProductPerformance from '@/components/dashboard/ProductPerformance';
+import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat, PercentIcon } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Dashboard = () => {
@@ -55,6 +56,15 @@ const Dashboard = () => {
       icon: <Repeat size={18} />,
       sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 10 + Math.floor(Math.random() * 30) })),
       formatter: (v) => v.toString() + '%'
+    },
+    {
+      title: 'Overall Return Rate',
+      value: 13.3,
+      change: -1.5,
+      trend: 'down' as const,
+      icon: <PercentIcon size={18} />,
+      sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 10 + Math.floor(Math.random() * 20) })),
+      formatter: (v) => v.toString() + '%'
     }
   ];
 
@@ -71,7 +81,7 @@ const Dashboard = () => {
         
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard 
                 key={index}
@@ -87,25 +97,18 @@ const Dashboard = () => {
           </div>
         </div>
         
+        {/* Product Performance Table */}
+        <ProductPerformance />
+        
         {/* Tabs for Dashboard Sections */}
         <div className="mt-8 animate-fade-in">
-          <Tabs defaultValue="generate-pin" className="w-full">
+          <Tabs defaultValue="overview" className="w-full">
             <TabsList className="mb-6 bg-white dark:bg-gray-800 p-1 rounded-lg">
               <TabsTrigger value="overview">Overview</TabsTrigger>
-              <TabsTrigger value="generate-pin">Generate & Pin</TabsTrigger>
-              <TabsTrigger value="user-behavior">User Behavior</TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview" className="mt-4">
               <ConversationAnalysis />
-            </TabsContent>
-            
-            <TabsContent value="generate-pin" className="mt-4">
-              <GraphGenerator />
-            </TabsContent>
-            
-            <TabsContent value="user-behavior" className="mt-4">
-              <UserBehavior />
             </TabsContent>
           </Tabs>
         </div>
