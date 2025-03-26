@@ -14,7 +14,7 @@ const Dashboard = () => {
   // Mock data for KPI cards
   const kpiData = [
     {
-      title: 'Total Conversations',
+      title: 'Total Orders',
       value: 1253,
       change: 12.3,
       trend: 'up' as const,
@@ -22,13 +22,13 @@ const Dashboard = () => {
       sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 50 + Math.floor(Math.random() * 50) }))
     },
     {
-      title: 'Average Engagement',
-      value: 4.2,
-      change: 8.7,
-      trend: 'up' as const,
+      title: 'Return Rate',
+      value: 9.2,
+      change: -8.7,
+      trend: 'down' as const,
       icon: <TrendingUp size={18} />,
       sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 30 + Math.floor(Math.random() * 70) })),
-      formatter: (v) => v.toString() + '/5'
+      formatter: (v) => v.toString() + '%'
     },
     {
       title: 'Average Order Value',
@@ -42,8 +42,8 @@ const Dashboard = () => {
     {
       title: 'Conversion Rate',
       value: 24.8,
-      change: -2.1,
-      trend: 'down' as const,
+      change: 12.1,
+      trend: 'up' as const,
       icon: <ShoppingCart size={18} />,
       sparklineData: Array.from({ length: 20 }, (_, i) => ({ value: 20 + Math.floor(Math.random() * 40) })),
       formatter: (v) => v.toString() + '%'
@@ -62,19 +62,19 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen bg-dashboard-background">
       <Header />
-      
+
       <main className="dashboard-container pb-20">
         {/* Dashboard Title */}
         <div className="mb-8 mt-4 animate-fade-in">
           <h1 className="text-2xl md:text-3xl font-medium text-dashboard-text-heading">AI Personal Stylist Dashboard</h1>
           <p className="text-dashboard-text-body mt-2">Insights and analytics for your AI-driven fashion recommendations</p>
         </div>
-        
+
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 xl:grid-cols-5 gap-6">
             {kpiData.map((kpi, index) => (
-              <KpiCard 
+              <KpiCard
                 key={index}
                 title={kpi.title}
                 value={kpi.value}
@@ -87,10 +87,10 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
-        
+
         {/* Product Performance Table */}
         <ProductPerformance />
-        
+
         {/* Tabs for Dashboard Sections */}
         <div className="mt-8 animate-fade-in">
           <Tabs defaultValue="overview" className="w-full">
@@ -99,27 +99,27 @@ const Dashboard = () => {
               <TabsTrigger value="generate-pin">Generate & Pin</TabsTrigger>
               <TabsTrigger value="user-behavior">User Behavior</TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="overview" className="mt-4">
               <ConversationAnalysis />
             </TabsContent>
-            
+
             <TabsContent value="generate-pin" className="mt-4">
               <GraphGenerator />
             </TabsContent>
-            
+
             <TabsContent value="user-behavior" className="mt-4">
               <UserBehavior />
             </TabsContent>
           </Tabs>
         </div>
-        
+
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-400 animate-fade-in" style={{ animationDelay: '0.4s' }}>
           <p>Powered by ACME AI • Version 1.0</p>
         </footer>
       </main>
-      
+
       {/* AI Chat Bot */}
       <ChatBot />
     </div>
