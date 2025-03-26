@@ -3,10 +3,11 @@ import React from 'react';
 import Header from '@/components/layout/Header';
 import KpiCard from '@/components/dashboard/KpiCard';
 import ConversationAnalysis from '@/components/dashboard/ConversationAnalysis';
-import ProductPerformance from '@/components/dashboard/ProductPerformance';
 import UserBehavior from '@/components/dashboard/UserBehavior';
 import ChatBot from '../components/ChatBot';
+import GraphGenerator from '../components/GraphGenerator';
 import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 const Dashboard = () => {
   // Mock data for KPI cards
@@ -86,14 +87,28 @@ const Dashboard = () => {
           </div>
         </div>
         
-        {/* Conversation Analysis */}
-        <ConversationAnalysis />
-        
-        {/* Product Performance */}
-        <ProductPerformance />
-        
-        {/* User Behavior */}
-        <UserBehavior />
+        {/* Tabs for Dashboard Sections */}
+        <div className="mt-8 animate-fade-in">
+          <Tabs defaultValue="overview" className="w-full">
+            <TabsList className="mb-6 bg-white dark:bg-gray-800 p-1 rounded-lg">
+              <TabsTrigger value="overview">Overview</TabsTrigger>
+              <TabsTrigger value="generate-pin">Generate & Pin</TabsTrigger>
+              <TabsTrigger value="user-behavior">User Behavior</TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview" className="mt-4">
+              <ConversationAnalysis />
+            </TabsContent>
+            
+            <TabsContent value="generate-pin" className="mt-4">
+              <GraphGenerator />
+            </TabsContent>
+            
+            <TabsContent value="user-behavior" className="mt-4">
+              <UserBehavior />
+            </TabsContent>
+          </Tabs>
+        </div>
         
         {/* Footer */}
         <footer className="mt-16 text-center text-sm text-gray-400 animate-fade-in" style={{ animationDelay: '0.4s' }}>
