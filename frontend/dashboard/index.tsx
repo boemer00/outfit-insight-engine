@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import Header from '@/components/layout/Header';
 import KpiCard from '@/components/dashboard/KpiCard';
@@ -8,27 +9,21 @@ import ChatBot from '../components/ChatBot';
 import GraphGenerator from '../components/GraphGenerator';
 import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useIsMobile } from '@/hooks/use-mobile';
 
 const Dashboard = () => {
-  // Screen size detection
+  // Screen size detection for logging only
   const [screenWidth, setScreenWidth] = useState(window.innerWidth);
-  const isMobile = useIsMobile();
   
-  // Update screen width on resize
+  // Update screen width on resize for logging purposes
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       setScreenWidth(width);
-      console.log('Screen width:', width, 
-        width < 768 ? '- Mobile layout (stacked cards)' : 
-        '- Desktop/Tablet layout (5 cards in a row)');
+      console.log('Screen width:', width, '- Desktop layout (5 cards in a row)');
     };
     
     // Log initial screen size
-    console.log('Initial screen width:', screenWidth, 
-      screenWidth < 768 ? '- Mobile layout (stacked cards)' : 
-      '- Desktop/Tablet layout (5 cards in a row)');
+    console.log('Initial screen width:', screenWidth, '- Desktop layout (5 cards in a row)');
     
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -94,7 +89,7 @@ const Dashboard = () => {
 
         {/* KPI Cards */}
         <div className="dashboard-section animate-fade-in">
-          <div className={`grid ${isMobile ? 'grid-cols-1' : 'grid-cols-5'} gap-6`}>
+          <div className="grid grid-cols-5 gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard
                 key={index}
