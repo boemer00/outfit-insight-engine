@@ -4,6 +4,7 @@ import Header from '@/components/layout/Header';
 import KpiCard from '@/components/dashboard/KpiCard';
 import ConversationAnalysis from '@/components/dashboard/ConversationAnalysis';
 import UserBehavior from '@/components/dashboard/UserBehavior';
+import ProductPerformance from '@/components/dashboard/ProductPerformance';
 import ChatBot from '../components/ChatBot';
 import GraphGenerator from '../components/GraphGenerator';
 import { MessageCircle, TrendingUp, DollarSign, ShoppingCart, Repeat } from 'lucide-react';
@@ -86,6 +87,9 @@ const Dashboard = () => {
             ))}
           </div>
         </div>
+        
+        {/* Product Performance Table */}
+        <ProductPerformance />
         
         {/* Tabs for Dashboard Sections */}
         <div className="mt-8 animate-fade-in">
