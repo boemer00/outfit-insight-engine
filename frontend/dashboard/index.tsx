@@ -68,9 +68,9 @@ const Dashboard = () => {
           <p className="text-dashboard-text-body mt-1">Insights and analytics for your AI-driven fashion recommendations</p>
         </div>
         
-        {/* KPI Cards - Single row layout */}
-        <div className="dashboard-section mb-8">
-          <div className="grid grid-cols-5 gap-4">
+        {/* KPI Cards */}
+        <div className="dashboard-section animate-fade-in">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
             {kpiData.map((kpi, index) => (
               <KpiCard 
                 key={index}
