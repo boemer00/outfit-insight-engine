@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import AIInsightBox from './AIInsightBox';
 
 interface FeedbackDriversPanelProps {
@@ -14,15 +14,24 @@ interface FeedbackDriversPanelProps {
 }
 
 const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps) => {
-  // Custom tooltip for bar chart
+  // Updated softer color palette
+  const colorPalette = {
+    'Size Issue': '#7EC8E3',    // Light Blue
+    'Quality Issue': '#80C784', // Soft Green
+    'Comfort Issue': '#B39DDB', // Soft Purple
+    'Color Mismatch': '#FFD54F' // Warm Yellow
+  };
+  
+  // Custom tooltip for bar chart with enhanced information
   const CustomBarTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
-          <p className="text-sm font-medium mb-1">{label}</p>
+        <div className="bg-white p-3 rounded-md shadow-md border border-gray-100">
+          <p className="text-sm font-medium mb-2">{label}</p>
           {payload.map((item: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: item.fill }}>
-              {item.name}: {item.value}
+            <p key={index} className="text-sm flex items-center py-1" style={{ color: item.fill }}>
+              <span className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: item.fill }}></span>
+              <span className="font-medium">{item.name}:</span> <span className="ml-1">{item.value}</span>
             </p>
           ))}
         </div>
@@ -42,58 +51,60 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={feedbackTrendsData}
-              margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
+              margin={{ top: 20, right: 20, left: 0, bottom: 0 }}
+              barGap={2}  // Small gap between bars in same group
+              barCategoryGap={16} // Gap between monthly groups
             >
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-              <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-              <YAxis tick={{ fontSize: 12 }} width={25} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" /> 
+              <XAxis 
+                dataKey="month" 
+                tick={{ fontSize: 12 }} 
+                axisLine={{ stroke: '#E0E0E0' }}
+                tickLine={{ stroke: '#E0E0E0' }}
+              />
+              <YAxis 
+                tick={{ fontSize: 12 }} 
+                width={30} 
+                axisLine={{ stroke: '#E0E0E0' }}
+                tickLine={{ stroke: '#E0E0E0' }}
+              />
               <Tooltip content={<CustomBarTooltip />} />
               <Bar 
                 dataKey="Size Issue" 
-                fill="#4A90E2" 
-                barSize={12}
+                fill={colorPalette['Size Issue']} 
+                barSize={10}
                 radius={[2, 2, 0, 0]}
               />
               <Bar 
                 dataKey="Quality Issue" 
-                fill="#4CAF50" 
-                barSize={12}
+                fill={colorPalette['Quality Issue']} 
+                barSize={10}
                 radius={[2, 2, 0, 0]}
               />
               <Bar 
                 dataKey="Comfort Issue" 
-                fill="#7B61FF" 
-                barSize={12}
+                fill={colorPalette['Comfort Issue']} 
+                barSize={10}
                 radius={[2, 2, 0, 0]}
               />
               <Bar 
                 dataKey="Color Mismatch" 
-                fill="#FFB74D" 
-                barSize={12}
+                fill={colorPalette['Color Mismatch']} 
+                barSize={10}
                 radius={[2, 2, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
         </div>
         
-        {/* Legend */}
-        <div className="mt-2 mb-6 flex flex-wrap gap-3 text-xs">
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#4A90E2' }} />
-            <span className="text-[#4A4A4A]">Size Issue</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#4CAF50' }} />
-            <span className="text-[#4A4A4A]">Quality Issue</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#7B61FF' }} />
-            <span className="text-[#4A4A4A]">Comfort Issue</span>
-          </div>
-          <div className="flex items-center">
-            <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#FFB74D' }} />
-            <span className="text-[#4A4A4A]">Color Mismatch</span>
-          </div>
+        {/* Legend with updated colors */}
+        <div className="mt-4 mb-6 flex flex-wrap gap-4 text-xs justify-center">
+          {Object.entries(colorPalette).map(([key, color]) => (
+            <div key={key} className="flex items-center">
+              <div className="w-3 h-3 rounded-sm mr-2" style={{ backgroundColor: color }} />
+              <span className="text-[#4A4A4A]">{key}</span>
+            </div>
+          ))}
         </div>
       </div>
       
