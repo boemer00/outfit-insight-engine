@@ -62,11 +62,11 @@ const ProductPerformance = () => {
     }
   ];
   
-  // Helper function to determine color based on percentage
-  const getPercentageColor = (percentage: number) => {
-    if (percentage <= 10) return 'bg-[#F2FCE2] text-green-800';
-    if (percentage <= 24) return 'bg-[#FEC6A1] text-orange-800';
-    return 'bg-[#ea384c] text-white';
+  // Helper function to determine gradient text color based on percentage
+  const getPercentageTextColor = (percentage: number) => {
+    if (percentage <= 10) return 'text-[#4CAF50] font-bold';
+    if (percentage <= 24) return 'text-[#FFA726] font-bold';
+    return 'text-[#F44336] font-bold';
   };
 
   return (
@@ -101,14 +101,14 @@ const ProductPerformance = () => {
                   <TableCell className="text-right">{product.unitsReturned}</TableCell>
                   <TableCell className="text-right">{product.netSales}</TableCell>
                   <TableCell className={cn(
-                    "text-right font-medium",
-                    getPercentageColor(product.returnRate)
+                    "text-right",
+                    getPercentageTextColor(product.returnRate)
                   )}>
                     {product.returnRate}%
                   </TableCell>
                   <TableCell className={cn(
-                    "text-right font-medium",
-                    getPercentageColor(product.firstTimeReturn)
+                    "text-right",
+                    getPercentageTextColor(product.firstTimeReturn)
                   )}>
                     {product.firstTimeReturn}%
                   </TableCell>
