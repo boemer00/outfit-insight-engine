@@ -12,7 +12,6 @@ import {
   ResponsiveContainer,
   LineChart,
   Line,
-  Legend,
   Cell,
   ComposedChart,
   Rectangle
@@ -23,8 +22,6 @@ import { cn } from '@/lib/utils';
 import { 
   Calendar, 
   ChevronDown, 
-  ArrowUp, 
-  ArrowDown, 
   Info
 } from 'lucide-react';
 import {
@@ -42,45 +39,7 @@ const ConversationAnalysis = () => {
     { name: 'Negative', value: 25, color: '#F44336' }
   ];
   
-  // Mock data for Sentiment by Product Category
-  const sentimentByCategory = [
-    { 
-      category: 'Shirts', 
-      positive: 45, 
-      neutral: 30, 
-      negative: 25 
-    },
-    { 
-      category: 'Shoes', 
-      positive: 38, 
-      neutral: 32, 
-      negative: 30 
-    },
-    { 
-      category: 'Sunglasses', 
-      positive: 30, 
-      neutral: 35, 
-      negative: 35 
-    },
-    { 
-      category: 'Bags', 
-      positive: 50, 
-      neutral: 33, 
-      negative: 17 
-    },
-  ];
-  
-  // Mock data for Top Negative Keywords
-  const negativeKeywords = [
-    { word: 'Too Small', count: 18 },
-    { word: 'Poor Quality', count: 15 },
-    { word: 'Uncomfortable', count: 12 },
-    { word: 'Wrong Color', count: 10 },
-    { word: 'Overpriced', count: 8 },
-    { word: 'Bad Fit', count: 7 },
-  ];
-  
-  // Mock data for Feedback Drivers Analysis (Middle Panel)
+  // Mock data for Feedback Drivers Analysis
   const returnReasonData = [
     { month: 'Jan', 'Size Issue': 28, 'Quality Issue': 12, 'Comfort Issue': 10, 'Color Mismatch': 8 },
     { month: 'Feb', 'Size Issue': 24, 'Quality Issue': 14, 'Comfort Issue': 11, 'Color Mismatch': 7 },
@@ -90,13 +49,6 @@ const ConversationAnalysis = () => {
     { month: 'Jun', 'Size Issue': 32, 'Quality Issue': 8, 'Comfort Issue': 14, 'Color Mismatch': 6 },
   ];
 
-  // Mock data for Recent Trends
-  const trendData = [
-    { month: 'Apr', 'Size Issue': 0, 'Quality Issue': 0, 'Comfort Issue': 0, 'Color Mismatch': 0 },
-    { month: 'May', 'Size Issue': 36, 'Quality Issue': -44, 'Comfort Issue': 15, 'Color Mismatch': -50 },
-    { month: 'Jun', 'Size Issue': 7, 'Quality Issue': -20, 'Comfort Issue': -7, 'Color Mismatch': 20 },
-  ];
-  
   // Mock data for Comparative Analysis
   const comparativeData = [
     { month: 'Jan', 'Overall Dissatisfaction': 22 },
@@ -107,16 +59,7 @@ const ConversationAnalysis = () => {
     { month: 'Jun', 'Overall Dissatisfaction': 26 },
   ];
 
-  // Comparative breakdown data
-  const comparativeBreakdown = [
-    { category: 'Size Issue', change: '+12%', severity: 'negative' },
-    { category: 'Quality Issue', change: '-5%', severity: 'positive' },
-    { category: 'Comfort Issue', change: '+8%', severity: 'negative' },
-    { category: 'Color Mismatch', change: '+2%', severity: 'negative' },
-    { category: 'Material Difference', change: '-3%', severity: 'positive' },
-  ];
-
-  // Problematic products data
+  // Problematic products data for AI insights
   const problematicProducts = [
     { product: 'DIYR Sunglasses', issue: 'Quality Issue', rate: '32%', suggestion: 'Revise material descriptions and quality control.' },
     { product: 'Comfort Shoes XL', issue: 'Size Issue', rate: '28%', suggestion: 'Update sizing guide with more detailed measurements.' },
@@ -127,8 +70,7 @@ const ConversationAnalysis = () => {
     { reason: 'Size Issue', count: 28, change: '+12%', color: '#4A90E2' },
     { reason: 'Quality Issue', count: 12, change: '-5%', color: '#82ca9d' },
     { reason: 'Comfort Issue', count: 10, change: '+8%', color: '#8884d8' },
-    { reason: 'Color Mismatch', count: 8, change: '+2%', color: '#ffc658' },
-    { reason: 'Material Difference', count: 6, change: '-3%', color: '#ff8042' }
+    { reason: 'Color Mismatch', count: 8, change: '+2%', color: '#ffc658' }
   ];
 
   // Time and category filters for middle panel
@@ -161,40 +103,6 @@ const ConversationAnalysis = () => {
           {payload.map((item: any, index: number) => (
             <p key={index} className="text-sm" style={{ color: item.stroke }}>
               {item.name}: {item.value}%
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Custom tooltip for sentiment by category
-  const CustomStackedBarTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
-          <p className="text-sm font-medium mb-1">{label}</p>
-          {payload.map((item: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: item.fill }}>
-              {item.name}: {item.value}%
-            </p>
-          ))}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Custom tooltip for trend data
-  const CustomTrendTooltip = ({ active, payload, label }: any) => {
-    if (active && payload && payload.length) {
-      return (
-        <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
-          <p className="text-sm font-medium mb-1">{label}</p>
-          {payload.map((item: any, index: number) => (
-            <p key={index} className="text-sm" style={{ color: item.value >= 0 ? '#F44336' : '#4CAF50' }}>
-              {item.name}: {item.value > 0 ? '+' : ''}{item.value}%
             </p>
           ))}
         </div>
@@ -254,19 +162,29 @@ const ConversationAnalysis = () => {
     return <Rectangle {...props} radius={[4, 4, 0, 0]} />;
   };
   
+  // AI insight box component for reuse
+  const AIInsightBox = ({ title, insights }: { title?: string, insights: React.ReactNode }) => (
+    <div className="bg-[#F0F0F0] p-3 rounded-lg border border-[#EFEFEF] shadow-sm">
+      <h4 className="text-sm font-medium text-dashboard-text-body mb-1 flex items-center">
+        <Info size={14} className="mr-1" /> {title || "AI Insight"}
+      </h4>
+      {insights}
+    </div>
+  );
+  
   return (
     <div className="dashboard-section animate-fade-in" style={{ animationDelay: '0.1s' }}>
       <h2 className="dashboard-section-title">Feedback Analysis</h2>
       
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Left Panel: Sentiment Intelligence */}
+        {/* Left Panel: Sentiment Intelligence & AI Insight */}
         <div className="dashboard-card">
-          <h3 className="dashboard-section-subtitle">Sentiment Intelligence</h3>
+          <h3 className="dashboard-section-subtitle">Sentiment Intelligence & AI Insight</h3>
           
           {/* Overall Sentiment Overview (Compact Pie Chart) */}
           <div className="mb-6">
             <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Overall Sentiment Distribution</h4>
-            <div className="h-[140px]">
+            <div className="h-[180px]">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Pie
@@ -274,7 +192,7 @@ const ConversationAnalysis = () => {
                     cx="50%"
                     cy="50%"
                     innerRadius={40}
-                    outerRadius={60}
+                    outerRadius={70}
                     paddingAngle={2}
                     dataKey="value"
                     animationDuration={1000}
@@ -307,7 +225,7 @@ const ConversationAnalysis = () => {
             </div>
             
             {/* Legend */}
-            <div className="flex justify-center items-center space-x-6 mt-1">
+            <div className="flex justify-center items-center space-x-6 mt-1 mb-6">
               {sentimentData.map((item, index) => (
                 <div key={index} className="flex items-center text-sm">
                   <div 
@@ -320,48 +238,24 @@ const ConversationAnalysis = () => {
             </div>
           </div>
           
-          {/* Sentiment Breakdown by Product Category (Stacked Bar Chart) */}
-          <div className="mb-6">
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Sentiment by Category</h4>
-            <div className="h-[180px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  layout="vertical"
-                  data={sentimentByCategory}
-                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} />
-                  <XAxis type="number" domain={[0, 100]} tickFormatter={(tick) => `${tick}%`} />
-                  <YAxis dataKey="category" type="category" width={75} tick={{ fontSize: 12 }} />
-                  <Tooltip content={<CustomStackedBarTooltip />} />
-                  <Bar dataKey="positive" stackId="a" fill="#4CAF50" />
-                  <Bar dataKey="neutral" stackId="a" fill="#BBDEFB" />
-                  <Bar dataKey="negative" stackId="a" fill="#F44336" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Top Negative Keywords (Tag Cloud / Keyword List) */}
-          <div>
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Top Negative Keywords</h4>
-            <div className="flex flex-wrap gap-2">
-              {negativeKeywords.map((keyword, index) => (
-                <div
-                  key={index}
-                  className="px-3 py-1 rounded-lg text-sm font-medium bg-[#F0F0F0] text-[#4A4A4A] hover:bg-[#E0E0E0] transition-colors cursor-pointer"
-                >
-                  {keyword.word}
-                  <span className="ml-1 text-xs opacity-80">({keyword.count})</span>
-                </div>
-              ))}
-            </div>
-          </div>
+          {/* AI Insight Box (replacing Top Negative Keywords) */}
+          <AIInsightBox 
+            insights={
+              <div>
+                <p className="text-xs text-[#4A4A4A] mb-2">
+                  <span className="font-medium">Common Issue:</span> Poor Quality reports have increased by 15% this month.
+                </p>
+                <p className="text-xs text-[#4A4A4A]">
+                  <span className="font-medium">Suggestion:</span> Improve material descriptions and quality assurance processes.
+                </p>
+              </div>
+            }
+          />
         </div>
         
-        {/* Middle Panel: Feedback Drivers Analysis */}
+        {/* Middle Panel: Feedback Drivers Analysis & AI Insight */}
         <div className="dashboard-card">
-          <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis</h3>
+          <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis & AI Insight</h3>
           
           {/* Filters */}
           <div className="flex justify-between items-center mb-4">
@@ -410,7 +304,7 @@ const ConversationAnalysis = () => {
           {/* Top Feedback Categories */}
           <div className="mb-6">
             <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Top Feedback Categories</h4>
-            <div className="h-[150px]">
+            <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={returnReasonData}
@@ -429,8 +323,8 @@ const ConversationAnalysis = () => {
             </div>
             
             {/* Color legend */}
-            <div className="mt-2 flex flex-wrap gap-3 text-xs">
-              {topReasons.slice(0, 4).map((reason, idx) => (
+            <div className="mt-2 mb-6 flex flex-wrap gap-3 text-xs">
+              {topReasons.map((reason, idx) => (
                 <div key={idx} className="flex items-center">
                   <div 
                     className="w-3 h-3 rounded-sm mr-1" 
@@ -442,51 +336,33 @@ const ConversationAnalysis = () => {
             </div>
           </div>
           
-          {/* Recent Trends (Line Graph) */}
-          <div className="mb-5">
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Recent Trends</h4>
-            <div className="h-[120px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <ComposedChart
-                  data={trendData}
-                  margin={{ top: 5, right: 5, left: -5, bottom: 5 }}
-                >
-                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
-                  <XAxis dataKey="month" tick={{ fontSize: 12 }} />
-                  <YAxis tickFormatter={(tick) => `${tick}%`} tick={{ fontSize: 12 }} width={35} domain={[-50, 50]} />
-                  <Tooltip content={<CustomTrendTooltip />} />
-                  <Bar dataKey="Size Issue" fill="#F44336" shape={<CustomBar />} />
-                  <Bar dataKey="Quality Issue" fill="#4CAF50" shape={<CustomBar />} />
-                  <Bar dataKey="Comfort Issue" fill="#F44336" shape={<CustomBar />} />
-                  <Bar dataKey="Color Mismatch" fill="#4CAF50" shape={<CustomBar />} />
-                </ComposedChart>
-              </ResponsiveContainer>
-            </div>
-          </div>
-          
-          {/* Automatic Insights (Text-Based Summary) */}
-          <div className="bg-[#F9F9F9] p-3 rounded-lg border border-[#EFEFEF]">
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-1 flex items-center">
-              <Info size={14} className="mr-1" /> AI Insights
-            </h4>
-            <p className="text-xs text-[#4A4A4A]">
-              Size-related complaints have increased by 12% this month. Consider enhancing size descriptions or offering sizing guidance. Quality issues are decreasing, showing improvement.
-            </p>
-          </div>
+          {/* AI Insight Box (replacing Recent Trends) */}
+          <AIInsightBox 
+            insights={
+              <div>
+                <p className="text-xs text-[#4A4A4A] mb-2">
+                  <span className="font-medium">Size-related complaints</span> have increased by 12% this month.
+                </p>
+                <p className="text-xs text-[#4A4A4A]">
+                  <span className="font-medium">Suggestion:</span> Enhance size descriptions or provide better sizing guidance.
+                </p>
+              </div>
+            }
+          />
         </div>
         
-        {/* Right Panel: Comparative Analysis & Actionable Insights */}
+        {/* Right Panel: Comparative Analysis & AI Insight */}
         <div className="dashboard-card">
-          <h3 className="dashboard-section-subtitle">Comparative Analysis & Insights</h3>
+          <h3 className="dashboard-section-subtitle">Comparative Analysis & AI Insight</h3>
           
-          {/* Overall Dissatisfaction Trend (Line Graph) */}
-          <div className="mb-5">
+          {/* Overall Dissatisfaction Trend (Line Graph) - with fixed Y-axis alignment */}
+          <div className="mb-6">
             <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Overall Dissatisfaction Trend</h4>
-            <div className="h-[150px]">
+            <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
                   data={comparativeData}
-                  margin={{ top: 5, right: 10, left: -5, bottom: 5 }}
+                  margin={{ top: 5, right: 10, left: 5, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
@@ -495,16 +371,9 @@ const ConversationAnalysis = () => {
                     width={35} 
                     tickFormatter={(tick) => `${tick}%`}
                     domain={[0, 30]}
+                    padding={{ bottom: 10 }}
                   />
-                  <Tooltip 
-                    content={<CustomLineTooltip />}
-                    wrapperStyle={{ 
-                      backgroundColor: 'white', 
-                      border: '1px solid #E0E0E0',
-                      borderRadius: '4px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
-                    }}
-                  />
+                  <Tooltip content={<CustomLineTooltip />} />
                   <Line 
                     type="monotone" 
                     dataKey="Overall Dissatisfaction" 
@@ -518,65 +387,26 @@ const ConversationAnalysis = () => {
             </div>
           </div>
           
-          {/* Comparative Breakdown (Table View) */}
-          <div className="mb-5">
-            <Separator className="my-3 bg-[#E0E0E0]" />
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Feedback Category Changes</h4>
-            
-            <div className="space-y-3">
-              {comparativeBreakdown.map((item, idx) => (
-                <div key={idx} className="flex justify-between items-center">
-                  <div className="flex items-center">
-                    <span className="text-sm text-[#4A4A4A]">{item.category}</span>
-                    <TooltipProvider>
-                      <UITooltip>
-                        <TooltipTrigger asChild>
-                          <Info size={12} className="ml-1 text-gray-400 cursor-help" />
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p className="text-xs">Compared to previous {timeFilter.toLowerCase()}</p>
-                        </TooltipContent>
-                      </UITooltip>
-                    </TooltipProvider>
-                  </div>
-                  <span className={cn(
-                    "text-sm font-medium flex items-center",
-                    item.severity === 'negative' ? "text-[#F44336]" : "text-[#4CAF50]"
-                  )}>
-                    {item.severity === 'negative' ? 
-                      <ArrowUp size={12} className="mr-1" /> : 
-                      <ArrowDown size={12} className="mr-1" />
-                    }
-                    {item.change}
+          {/* AI Insight (replacing Comparative Breakdown and Product-Level Analysis) */}
+          <h4 className="text-sm font-medium text-dashboard-text-body mb-2">AI Insight</h4>
+          
+          <div className="space-y-4">
+            {problematicProducts.map((product, idx) => (
+              <div key={idx} className="bg-[#F0F0F0] p-3 rounded-lg border border-[#EFEFEF] shadow-sm">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium text-[#4A4A4A]">{product.product}</span>
+                  <span className="text-xs bg-[#FFDEE2] text-[#F44336] px-2 py-0.5 rounded">
+                    {product.rate} Returns
                   </span>
                 </div>
-              ))}
-            </div>
-          </div>
-          
-          {/* Product-Level Analysis & Recommendations */}
-          <div>
-            <Separator className="my-3 bg-[#E0E0E0]" />
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Product-Level Analysis</h4>
-            
-            <div className="space-y-4">
-              {problematicProducts.map((product, idx) => (
-                <div key={idx} className="bg-[#F9F9F9] p-3 rounded-lg border border-[#EFEFEF]">
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="text-sm font-medium text-[#4A4A4A]">{product.product}</span>
-                    <span className="text-xs bg-[#FFDEE2] text-[#F44336] px-2 py-0.5 rounded">
-                      {product.rate} Returns
-                    </span>
-                  </div>
-                  <p className="text-xs text-[#777777] mb-1">
-                    Most common issue: <span className="font-medium">{product.issue}</span>
-                  </p>
-                  <p className="text-xs text-[#4A4A4A]">
-                    <span className="font-medium">Suggestion:</span> {product.suggestion}
-                  </p>
-                </div>
-              ))}
-            </div>
+                <p className="text-xs text-[#777777] mb-1">
+                  Most common issue: <span className="font-medium">{product.issue}</span>
+                </p>
+                <p className="text-xs text-[#4A4A4A]">
+                  <span className="font-medium">Suggestion:</span> {product.suggestion}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </div>
