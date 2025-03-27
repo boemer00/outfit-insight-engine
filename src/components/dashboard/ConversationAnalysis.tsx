@@ -13,8 +13,9 @@ import {
   LineChart,
   Line,
   Cell,
-  ComposedChart,
-  Rectangle
+  AreaChart,
+  Area,
+  Legend
 } from 'recharts';
 import { Separator } from '@/components/ui/separator';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -39,8 +40,8 @@ const ConversationAnalysis = () => {
     { name: 'Negative', value: 25, color: '#F44336' }
   ];
   
-  // Mock data for Feedback Drivers Analysis
-  const returnReasonData = [
+  // Mock data for Feedback Drivers Analysis - Updated for Area Chart
+  const feedbackTrendsData = [
     { month: 'Jan', 'Size Issue': 28, 'Quality Issue': 12, 'Comfort Issue': 10, 'Color Mismatch': 8 },
     { month: 'Feb', 'Size Issue': 24, 'Quality Issue': 14, 'Comfort Issue': 11, 'Color Mismatch': 7 },
     { month: 'Mar', 'Size Issue': 26, 'Quality Issue': 16, 'Comfort Issue': 9, 'Color Mismatch': 9 },
@@ -49,36 +50,26 @@ const ConversationAnalysis = () => {
     { month: 'Jun', 'Size Issue': 32, 'Quality Issue': 8, 'Comfort Issue': 14, 'Color Mismatch': 6 },
   ];
 
-  // Mock data for Comparative Analysis
+  // Mock data for Comparative Analysis - Current vs Previous Year
   const comparativeData = [
-    { month: 'Jan', 'Overall Dissatisfaction': 22 },
-    { month: 'Feb', 'Overall Dissatisfaction': 20 },
-    { month: 'Mar', 'Overall Dissatisfaction': 18 },
-    { month: 'Apr', 'Overall Dissatisfaction': 19 },
-    { month: 'May', 'Overall Dissatisfaction': 24 },
-    { month: 'Jun', 'Overall Dissatisfaction': 26 },
+    { month: 'Jan', '2025': 22, '2024': 26 },
+    { month: 'Feb', '2025': 20, '2024': 24 },
+    { month: 'Mar', '2025': 18, '2024': 22 },
+    { month: 'Apr', '2025': 19, '2024': 21 },
+    { month: 'May', '2025': 24, '2024': 27 },
+    { month: 'Jun', '2025': 26, '2024': 29 },
   ];
 
-  // Problematic products data for AI insights
-  const problematicProducts = [
-    { product: 'DIYR Sunglasses', issue: 'Quality Issue', rate: '32%', suggestion: 'Revise material descriptions and quality control.' },
-    { product: 'Comfort Shoes XL', issue: 'Size Issue', rate: '28%', suggestion: 'Update sizing guide with more detailed measurements.' },
-  ];
+  // AI insight data for right panel
+  const aiInsightData = {
+    product: 'DIYR Sunglasses',
+    issue: 'Quality Issue',
+    rate: '32%',
+    suggestion: 'Revise material descriptions and enhance quality control.'
+  };
   
-  // Top return reasons with frequency counts
-  const topReasons = [
-    { reason: 'Size Issue', count: 28, change: '+12%', color: '#4A90E2' },
-    { reason: 'Quality Issue', count: 12, change: '-5%', color: '#82ca9d' },
-    { reason: 'Comfort Issue', count: 10, change: '+8%', color: '#8884d8' },
-    { reason: 'Color Mismatch', count: 8, change: '+2%', color: '#ffc658' }
-  ];
-
-  // Time and category filters for middle panel
-  const [timeFilter, setTimeFilter] = useState('Month');
-  const [categoryFilter, setCategoryFilter] = useState('All Categories');
-
-  // Custom tooltip for bar chart
-  const CustomBarTooltip = ({ active, payload, label }: any) => {
+  // Custom tooltip for area chart
+  const CustomAreaTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
@@ -117,15 +108,6 @@ const ConversationAnalysis = () => {
     
     return (
       <g>
-        <g>
-          <path 
-            d={`M${cx},${cy} L${cx},${cy - outerRadius - 10}`} 
-            stroke={fill} 
-            fill="none"
-            strokeWidth={2}
-          />
-        </g>
-        {/* Base arc */}
         <path 
           d={`M${cx},${cy} L${cx},${cy - outerRadius - 10}`} 
           stroke={fill} 
@@ -154,12 +136,6 @@ const ConversationAnalysis = () => {
         />
       </g>
     );
-  };
-
-  // Custom shape for bar chart
-  const CustomBar = (props: any) => {
-    const { fill, x, y, width, height } = props;
-    return <Rectangle {...props} radius={[4, 4, 0, 0]} />;
   };
   
   // AI insight box component for reuse
@@ -238,7 +214,7 @@ const ConversationAnalysis = () => {
             </div>
           </div>
           
-          {/* AI Insight Box (replacing Top Negative Keywords) */}
+          {/* AI Insight Box */}
           <AIInsightBox 
             insights={
               <div>
@@ -257,91 +233,78 @@ const ConversationAnalysis = () => {
         <div className="dashboard-card">
           <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis & AI Insight</h3>
           
-          {/* Filters */}
-          <div className="flex justify-between items-center mb-4">
-            <div className="relative">
-              <button className="flex items-center gap-1 px-3 py-1 text-sm rounded-md bg-[#F0F0F0] text-[#4A4A4A]">
-                {categoryFilter} <ChevronDown size={14} />
-              </button>
-            </div>
-            <div className="flex items-center gap-2">
-              <button 
-                className={cn(
-                  "px-3 py-1 text-xs rounded-md", 
-                  timeFilter === 'Month' 
-                    ? "bg-[#4A90E2] text-white" 
-                    : "bg-[#F0F0F0] text-[#4A4A4A]"
-                )}
-                onClick={() => setTimeFilter('Month')}
-              >
-                Month
-              </button>
-              <button 
-                className={cn(
-                  "px-3 py-1 text-xs rounded-md", 
-                  timeFilter === 'Quarter' 
-                    ? "bg-[#4A90E2] text-white" 
-                    : "bg-[#F0F0F0] text-[#4A4A4A]"
-                )}
-                onClick={() => setTimeFilter('Quarter')}
-              >
-                Quarter
-              </button>
-              <button 
-                className={cn(
-                  "px-3 py-1 text-xs rounded-md", 
-                  timeFilter === 'Year' 
-                    ? "bg-[#4A90E2] text-white" 
-                    : "bg-[#F0F0F0] text-[#4A4A4A]"
-                )}
-                onClick={() => setTimeFilter('Year')}
-              >
-                Year
-              </button>
-            </div>
-          </div>
-          
-          {/* Top Feedback Categories */}
+          {/* Feedback Trends Area Chart */}
           <div className="mb-6">
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Top Feedback Categories</h4>
+            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Feedback Trends by Category</h4>
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                  data={returnReasonData}
-                  margin={{ top: 10, right: 10, left: -10, bottom: 0 }}
+                <AreaChart
+                  data={feedbackTrendsData}
+                  margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
                   <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                   <YAxis tick={{ fontSize: 12 }} width={25} />
-                  <Tooltip content={<CustomBarTooltip />} />
-                  <Bar dataKey="Size Issue" fill="#4A90E2" shape={<CustomBar />} />
-                  <Bar dataKey="Quality Issue" fill="#82ca9d" shape={<CustomBar />} />
-                  <Bar dataKey="Comfort Issue" fill="#8884d8" shape={<CustomBar />} />
-                  <Bar dataKey="Color Mismatch" fill="#ffc658" shape={<CustomBar />} />
-                </BarChart>
+                  <Tooltip content={<CustomAreaTooltip />} />
+                  <Area 
+                    type="monotone" 
+                    dataKey="Size Issue" 
+                    stackId="1" 
+                    stroke="#4A90E2" 
+                    fill="#4A90E2" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="Quality Issue" 
+                    stackId="1" 
+                    stroke="#4CAF50" 
+                    fill="#4CAF50" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="Comfort Issue" 
+                    stackId="1" 
+                    stroke="#7B61FF" 
+                    fill="#7B61FF" 
+                  />
+                  <Area 
+                    type="monotone" 
+                    dataKey="Color Mismatch" 
+                    stackId="1" 
+                    stroke="#FFB74D" 
+                    fill="#FFB74D" 
+                  />
+                </AreaChart>
               </ResponsiveContainer>
             </div>
             
-            {/* Color legend */}
+            {/* Legend */}
             <div className="mt-2 mb-6 flex flex-wrap gap-3 text-xs">
-              {topReasons.map((reason, idx) => (
-                <div key={idx} className="flex items-center">
-                  <div 
-                    className="w-3 h-3 rounded-sm mr-1" 
-                    style={{ backgroundColor: reason.color }}
-                  />
-                  <span className="text-[#4A4A4A]">{reason.reason}</span>
-                </div>
-              ))}
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#4A90E2' }} />
+                <span className="text-[#4A4A4A]">Size Issue</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#4CAF50' }} />
+                <span className="text-[#4A4A4A]">Quality Issue</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#7B61FF' }} />
+                <span className="text-[#4A4A4A]">Comfort Issue</span>
+              </div>
+              <div className="flex items-center">
+                <div className="w-3 h-3 rounded-sm mr-1" style={{ backgroundColor: '#FFB74D' }} />
+                <span className="text-[#4A4A4A]">Color Mismatch</span>
+              </div>
             </div>
           </div>
           
-          {/* AI Insight Box (replacing Recent Trends) */}
+          {/* AI Insight Box */}
           <AIInsightBox 
             insights={
               <div>
                 <p className="text-xs text-[#4A4A4A] mb-2">
-                  <span className="font-medium">Size-related complaints</span> have increased by 12% this month.
+                  <span className="font-medium">Common Issue:</span> Size-related complaints have increased by 12% this month.
                 </p>
                 <p className="text-xs text-[#4A4A4A]">
                   <span className="font-medium">Suggestion:</span> Enhance size descriptions or provide better sizing guidance.
@@ -355,9 +318,9 @@ const ConversationAnalysis = () => {
         <div className="dashboard-card">
           <h3 className="dashboard-section-subtitle">Comparative Analysis & AI Insight</h3>
           
-          {/* Overall Dissatisfaction Trend (Line Graph) - with fixed Y-axis alignment */}
+          {/* Year-over-Year Comparison Line Graph */}
           <div className="mb-6">
-            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Overall Dissatisfaction Trend</h4>
+            <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Dissatisfaction Trend Comparison</h4>
             <div className="h-[200px]">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart
@@ -376,38 +339,59 @@ const ConversationAnalysis = () => {
                   <Tooltip content={<CustomLineTooltip />} />
                   <Line 
                     type="monotone" 
-                    dataKey="Overall Dissatisfaction" 
+                    dataKey="2025" 
                     stroke="#4A90E2" 
                     strokeWidth={2} 
                     dot={{ r: 3 }} 
                     activeDot={{ r: 5 }}
+                    name="2025"
+                  />
+                  <Line 
+                    type="monotone" 
+                    dataKey="2024" 
+                    stroke="#BBDEFB" 
+                    strokeWidth={2} 
+                    strokeDasharray="5 5"
+                    dot={{ r: 3 }} 
+                    activeDot={{ r: 5 }}
+                    name="2024"
                   />
                 </LineChart>
               </ResponsiveContainer>
             </div>
+            
+            {/* Line chart legend */}
+            <div className="flex justify-center items-center space-x-6 mt-1 mb-6">
+              <div className="flex items-center text-sm">
+                <div className="w-8 h-0.5 mr-2 bg-[#4A90E2]" />
+                <span className="text-dashboard-text-body text-xs">2025</span>
+              </div>
+              <div className="flex items-center text-sm">
+                <div className="w-8 h-0.5 mr-2 bg-[#BBDEFB] border-0 border-dashed border-b-[#BBDEFB]" style={{ borderBottomWidth: '1px', borderStyle: 'dashed' }} />
+                <span className="text-dashboard-text-body text-xs">2024</span>
+              </div>
+            </div>
           </div>
           
-          {/* AI Insight (replacing Comparative Breakdown and Product-Level Analysis) */}
-          <h4 className="text-sm font-medium text-dashboard-text-body mb-2">AI Insight</h4>
-          
-          <div className="space-y-4">
-            {problematicProducts.map((product, idx) => (
-              <div key={idx} className="bg-[#F0F0F0] p-3 rounded-lg border border-[#EFEFEF] shadow-sm">
+          {/* AI Insight Box */}
+          <AIInsightBox 
+            insights={
+              <div>
                 <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium text-[#4A4A4A]">{product.product}</span>
+                  <span className="text-sm font-medium text-[#4A4A4A]">{aiInsightData.product}</span>
                   <span className="text-xs bg-[#FFDEE2] text-[#F44336] px-2 py-0.5 rounded">
-                    {product.rate} Returns
+                    {aiInsightData.rate} Returns
                   </span>
                 </div>
                 <p className="text-xs text-[#777777] mb-1">
-                  Most common issue: <span className="font-medium">{product.issue}</span>
+                  Most common issue: <span className="font-medium">{aiInsightData.issue}</span>
                 </p>
                 <p className="text-xs text-[#4A4A4A]">
-                  <span className="font-medium">Suggestion:</span> {product.suggestion}
+                  <span className="font-medium">Suggestion:</span> {aiInsightData.suggestion}
                 </p>
               </div>
-            ))}
-          </div>
+            }
+          />
         </div>
       </div>
     </div>
