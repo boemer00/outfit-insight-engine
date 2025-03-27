@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import AIInsightBox from './AIInsightBox';
 
 interface FeedbackDriversPanelProps {
@@ -14,8 +14,8 @@ interface FeedbackDriversPanelProps {
 }
 
 const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps) => {
-  // Custom tooltip for area chart
-  const CustomAreaTooltip = ({ active, payload, label }: any) => {
+  // Custom tooltip for bar chart
+  const CustomBarTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
@@ -35,53 +35,44 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
     <div className="dashboard-card">
       <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis</h3>
       
-      {/* Feedback Trends Area Chart */}
+      {/* Feedback Trends Grouped Bar Chart */}
       <div className="mb-6">
         <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Feedback Trends by Category</h4>
         <div className="h-[200px]">
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart
+            <BarChart
               data={feedbackTrendsData}
               margin={{ top: 10, right: 10, left: 0, bottom: 0 }}
             >
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
               <XAxis dataKey="month" tick={{ fontSize: 12 }} />
               <YAxis tick={{ fontSize: 12 }} width={25} />
-              <Tooltip content={<CustomAreaTooltip />} />
-              <Area 
-                type="monotone" 
+              <Tooltip content={<CustomBarTooltip />} />
+              <Bar 
                 dataKey="Size Issue" 
-                stackId="1" 
-                stroke="#4A90E2" 
                 fill="#4A90E2" 
-                strokeWidth={1.5}
+                barSize={12}
+                radius={[2, 2, 0, 0]}
               />
-              <Area 
-                type="monotone" 
+              <Bar 
                 dataKey="Quality Issue" 
-                stackId="1" 
-                stroke="#4CAF50" 
                 fill="#4CAF50" 
-                strokeWidth={1.5}
+                barSize={12}
+                radius={[2, 2, 0, 0]}
               />
-              <Area 
-                type="monotone" 
+              <Bar 
                 dataKey="Comfort Issue" 
-                stackId="1" 
-                stroke="#7B61FF" 
                 fill="#7B61FF" 
-                strokeWidth={1.5}
+                barSize={12}
+                radius={[2, 2, 0, 0]}
               />
-              <Area 
-                type="monotone" 
+              <Bar 
                 dataKey="Color Mismatch" 
-                stackId="1" 
-                stroke="#FFB74D" 
                 fill="#FFB74D" 
-                strokeWidth={1.5}
-                fillOpacity={0.9}
+                barSize={12}
+                radius={[2, 2, 0, 0]}
               />
-            </AreaChart>
+            </BarChart>
           </ResponsiveContainer>
         </div>
         
