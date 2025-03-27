@@ -187,10 +187,10 @@ const GraphGenerator = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        <p className="text-dashboard-text-body">
+        {/* <p className="text-dashboard-text-body">
           Ask the AI assistant questions like <span className="font-medium">"Show me return rates for polo shirts over the last 7 days"</span> to
           generate graphs. When a graph is generated, you can pin it to this dashboard.
-        </p>
+        </p> */}
 
         {pinnedGraphs.length === 0 ? (
           <Card className="border-dashed border-2 p-6">
