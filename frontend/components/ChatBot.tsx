@@ -269,7 +269,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      content: "Hello! I'm your AI data assistant. Ask me questions about your customer behavior and product performance. You can also ask for visualizations by saying 'Show me...'",
+      content: "Hello! I'm your AI data analyst. Ask me questions about your data or ask for visualizations by saying 'Show me...'",
       sender: 'bot',
       timestamp: new Date(),
       graph: null
