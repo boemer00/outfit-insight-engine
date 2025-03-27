@@ -58,10 +58,10 @@ const ProductPerformance = () => {
       returnRate: 24,
       firstTimeReturn: 67,
       returnLag: 7,
-      topReasons: 'Comfort Issue',
+      topReasons: 'Color Mismatch',
     }
   ];
-  
+
   // Helper function to determine gradient text color based on percentage
   const getPercentageTextColor = (percentage: number) => {
     if (percentage <= 10) return 'text-[#4CAF50] font-bold';
@@ -72,7 +72,7 @@ const ProductPerformance = () => {
   return (
     <div className="dashboard-section animate-fade-in" style={{ animationDelay: '0.2s' }}>
       <h2 className="dashboard-section-title">Product Performance</h2>
-      
+
       <div className="dashboard-card overflow-hidden">
         <div className="overflow-x-auto">
           <Table>

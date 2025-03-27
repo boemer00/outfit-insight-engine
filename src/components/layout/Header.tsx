@@ -5,8 +5,8 @@ import { cn } from '@/lib/utils';
 
 const Header = () => {
   const [activeTab, setActiveTab] = useState('Dashboard');
-  const [dateRange, setDateRange] = useState('This Week');
-  
+  const [dateRange, setDateRange] = useState('This Month');
+
   return (
     <header className="py-6 px-6 bg-white border-b border-gray-100 animate-fade-in">
       <div className="max-w-[1440px] mx-auto">
@@ -15,7 +15,7 @@ const Header = () => {
             <div className="text-xl font-medium text-dashboard-text-heading">
               ACME Wear
             </div>
-            
+
             <nav className="hidden md:flex items-center space-x-1">
               {[
                 { name: 'Dashboard', icon: <LayoutDashboard size={16} /> },
@@ -39,17 +39,17 @@ const Header = () => {
               ))}
             </nav>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="relative w-64 hidden lg:block">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-              <input 
-                type="text" 
-                placeholder="Search conversations..." 
+              <input
+                type="text"
+                placeholder="Search conversations..."
                 className="w-full pl-10 pr-4 py-2 text-sm bg-gray-50 border border-gray-100 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-100 transition-all"
               />
             </div>
-            
+
             <div className="relative">
               <button className="flex items-center px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-lg hover:bg-gray-50 transition-all">
                 <span className="mr-2">{dateRange}</span>
