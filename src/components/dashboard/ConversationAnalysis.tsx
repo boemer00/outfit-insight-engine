@@ -15,14 +15,9 @@ import {
   Line,
   Legend 
 } from 'recharts';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
 
 const ConversationAnalysis = () => {
-  // State for filters
-  const [timeRange, setTimeRange] = useState('month');
-  const [productCategory, setProductCategory] = useState('all');
-
   // Mock data for Sentiment-Based Return Analysis
   const sentimentData = [
     { name: 'Positive', value: 35, color: '#4CAF50' },
@@ -52,11 +47,11 @@ const ConversationAnalysis = () => {
 
   // Top return reasons with frequency counts
   const topReasons = [
-    { reason: 'Size Issue', count: 28, change: '+12%' },
-    { reason: 'Quality Issue', count: 12, change: '-5%' },
-    { reason: 'Comfort Issue', count: 10, change: '+8%' },
-    { reason: 'Color Mismatch', count: 8, change: '+2%' },
-    { reason: 'Material Difference', count: 6, change: '-3%' }
+    { reason: 'Size Issue', count: 28, change: '+12%', color: '#4A90E2' },
+    { reason: 'Quality Issue', count: 12, change: '-5%', color: '#82ca9d' },
+    { reason: 'Comfort Issue', count: 10, change: '+8%', color: '#8884d8' },
+    { reason: 'Color Mismatch', count: 8, change: '+2%', color: '#ffc658' },
+    { reason: 'Material Difference', count: 6, change: '-3%', color: '#ff8042' }
   ];
 
   // Custom tooltip for bar chart
@@ -104,53 +99,15 @@ const ConversationAnalysis = () => {
           <SentimentChart data={sentimentData} />
         </div>
         
-        {/* Return Reason Trend Analysis */}
+        {/* Return Reason Trend Analysis - Middle Panel with simplified view */}
         <div className="dashboard-card">
           <h3 className="dashboard-section-subtitle">Top Return Reasons</h3>
-          
-          <div className="flex flex-wrap justify-between items-center mb-4">
-            <Select value={productCategory} onValueChange={setProductCategory}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Product Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Categories</SelectItem>
-                <SelectItem value="shirts">Shirts</SelectItem>
-                <SelectItem value="sunglasses">Sunglasses</SelectItem>
-                <SelectItem value="shoes">Shoes</SelectItem>
-              </SelectContent>
-            </Select>
-            
-            <div className="flex space-x-2 mt-2 sm:mt-0">
-              <Button 
-                variant={timeRange === 'month' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setTimeRange('month')}
-              >
-                Month
-              </Button>
-              <Button 
-                variant={timeRange === 'quarter' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setTimeRange('quarter')}
-              >
-                Quarter
-              </Button>
-              <Button 
-                variant={timeRange === 'custom' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setTimeRange('custom')}
-              >
-                Custom
-              </Button>
-            </div>
-          </div>
           
           <div className="flex flex-wrap gap-2 mb-4">
             {topReasons.map((tag, index) => (
               <div 
                 key={index}
-                className="dashboard-chip text-xs font-medium"
+                className="px-3 py-1 rounded-lg text-sm font-medium bg-[#F0F0F0] text-[#4A4A4A]"
               >
                 {tag.reason}
                 <span className="ml-1 text-xs opacity-80">({tag.count})</span>
@@ -175,16 +132,30 @@ const ConversationAnalysis = () => {
               </BarChart>
             </ResponsiveContainer>
           </div>
+          
+          {/* Color legend */}
+          <div className="mt-2 flex flex-wrap gap-3 text-xs">
+            {topReasons.slice(0, 4).map((reason, idx) => (
+              <div key={idx} className="flex items-center">
+                <div 
+                  className="w-3 h-3 rounded-sm mr-1" 
+                  style={{ backgroundColor: reason.color }}
+                />
+                <span className="text-[#4A4A4A]">{reason.reason}</span>
+              </div>
+            ))}
+          </div>
         </div>
         
-        {/* Comparative Analysis */}
+        {/* Comparative Analysis - Right Panel with enhanced features */}
         <div className="dashboard-card">
           <h3 className="dashboard-section-subtitle">Comparative Analysis</h3>
           
           <div className="space-y-3 mb-4">
+            <Separator className="my-2 bg-[#E0E0E0]" />
             {topReasons.slice(0, 4).map((reason, idx) => (
               <div key={idx} className="flex justify-between items-center">
-                <span className="text-sm">{reason.reason}</span>
+                <span className="text-sm text-[#4A4A4A]">{reason.reason}</span>
                 <span className={`text-sm font-medium ${
                   reason.change.startsWith('+') ? 'text-[#F44336]' : 'text-[#4CAF50]'
                 }`}>
@@ -200,15 +171,23 @@ const ConversationAnalysis = () => {
                 data={comparativeData}
                 margin={{ top: 5, right: 10, left: -10, bottom: 5 }}
               >
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+                <CartesianGrid strokeDasharray="3 3" stroke="#E0E0E0" />
                 <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                 <YAxis tick={{ fontSize: 12 }} width={25} />
-                <Tooltip content={<CustomLineTooltip />} />
+                <Tooltip 
+                  content={<CustomLineTooltip />}
+                  wrapperStyle={{ 
+                    backgroundColor: 'white', 
+                    border: '1px solid #E0E0E0',
+                    borderRadius: '4px',
+                    boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                  }}
+                />
                 <Legend wrapperStyle={{ fontSize: '10px', marginTop: '10px' }} />
                 <Line 
                   type="monotone" 
                   dataKey="Overall Dissatisfaction" 
-                  stroke="#F44336" 
+                  stroke="#4A90E2" 
                   strokeWidth={2} 
                   dot={{ r: 3 }} 
                   activeDot={{ r: 5 }}
