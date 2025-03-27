@@ -12,18 +12,30 @@ interface SentimentPanelProps {
 }
 
 const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
+  // Updated color palette
+  const updatedSentimentData = sentimentData.map(item => {
+    let newColor = item.color;
+    
+    // Update colors based on sentiment type
+    if (item.name === 'Positive') newColor = '#80C784'; // Soft Green
+    if (item.name === 'Neutral') newColor = '#A5C9CA'; // Muted Teal
+    if (item.name === 'Negative') newColor = '#EF9A9A'; // Soft Red
+    
+    return { ...item, color: newColor };
+  });
+  
   // Custom tooltip for pie chart with percentages
   const CustomPieTooltip = ({ active, payload }: any) => {
     if (active && payload && payload.length) {
       const data = payload[0].payload;
-      const totalValue = sentimentData.reduce((acc, item) => acc + item.value, 0);
+      const totalValue = updatedSentimentData.reduce((acc, item) => acc + item.value, 0);
       const percentage = Math.round((data.value / totalValue) * 100);
       
       return (
         <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
           <p className="text-sm font-medium">{data.name}</p>
           <p className="text-sm text-gray-700">
-            {data.value} ({percentage}%)
+            {percentage}% - {data.value} reports
           </p>
         </div>
       );
@@ -42,7 +54,7 @@ const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Pie
-                data={sentimentData}
+                data={updatedSentimentData}
                 cx="50%"
                 cy="50%"
                 innerRadius={45}
@@ -51,7 +63,7 @@ const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
                 dataKey="value"
                 animationDuration={1000}
               >
-                {sentimentData.map((entry, index) => (
+                {updatedSentimentData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
@@ -60,9 +72,9 @@ const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
           </ResponsiveContainer>
         </div>
         
-        {/* Legend */}
+        {/* Legend with updated colors */}
         <div className="flex justify-center items-center space-x-6 mt-1 mb-6">
-          {sentimentData.map((item, index) => (
+          {updatedSentimentData.map((item, index) => (
             <div key={index} className="flex items-center text-sm">
               <div 
                 className="w-3 h-3 rounded-full mr-2" 
