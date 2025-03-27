@@ -1,134 +1,123 @@
 
 import React from 'react';
-import { Clock, TrendingUp, ArrowDownRight, ArrowUpRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 
 const ProductPerformance = () => {
   const productData = [
     {
       id: 1,
       name: 'Dark Polo Shirt',
-      timesRecommended: 120,
-      ctr: 30,
-      crossSellUptake: 25,
-      dropoutRate: 0,
-      avgTimeOnPage: '1m 15s',
-      mostPairedSku: 'DIYR Sunglasses',
-      trend: 'up'
+      unitsSold: 120,
+      unitsReturned: 0,
+      netSales: 120,
+      returnRate: 0,
+      firstTimeReturn: 0,
+      returnLag: 0,
+      topReasons: '-',
     },
     {
       id: 2,
       name: 'Monoscape Tee',
-      timesRecommended: 90,
-      ctr: 25,
-      crossSellUptake: 15,
-      dropoutRate: 5,
-      avgTimeOnPage: '0m 50s',
-      mostPairedSku: 'Dash Force Sneakers',
-      trend: 'up'
+      unitsSold: 90,
+      unitsReturned: 5,
+      netSales: 85,
+      returnRate: 6,
+      firstTimeReturn: 30,
+      returnLag: 3,
+      topReasons: 'Size Issue',
     },
     {
       id: 3,
       name: 'DIYR Sunglasses',
-      timesRecommended: 50,
-      ctr: 20,
-      crossSellUptake: 10,
-      dropoutRate: 3,
-      avgTimeOnPage: '1m 05s',
-      mostPairedSku: 'Monoscape Tee',
-      trend: 'neutral'
+      unitsSold: 50,
+      unitsReturned: 18,
+      netSales: 32,
+      returnRate: 36,
+      firstTimeReturn: 25,
+      returnLag: 5,
+      topReasons: 'Quality Issue',
     },
     {
       id: 4,
       name: 'Dark Phoenix Tee',
-      timesRecommended: 30,
-      ctr: 15,
-      crossSellUptake: 5,
-      dropoutRate: 1,
-      avgTimeOnPage: '0m 40s',
-      mostPairedSku: 'DIYR Sunglasses',
-      trend: 'down'
+      unitsSold: 30,
+      unitsReturned: 2,
+      netSales: 28,
+      returnRate: 7,
+      firstTimeReturn: 2,
+      returnLag: 1,
+      topReasons: 'Size Issue',
     },
     {
       id: 5,
       name: 'Dash Force Sneakers',
-      timesRecommended: 25,
-      ctr: 10,
-      crossSellUptake: 3,
-      dropoutRate: 8,
-      avgTimeOnPage: '1m 20s',
-      mostPairedSku: 'Other',
-      trend: 'down'
+      unitsSold: 25,
+      unitsReturned: 6,
+      netSales: 19,
+      returnRate: 24,
+      firstTimeReturn: 67,
+      returnLag: 7,
+      topReasons: 'Comfort Issue',
     }
   ];
   
+  // Helper function to determine color based on percentage
+  const getPercentageColor = (percentage: number) => {
+    if (percentage <= 10) return 'bg-[#F2FCE2] text-green-800';
+    if (percentage <= 24) return 'bg-[#FEC6A1] text-orange-800';
+    return 'bg-[#ea384c] text-white';
+  };
+
   return (
     <div className="dashboard-section animate-fade-in" style={{ animationDelay: '0.2s' }}>
       <h2 className="dashboard-section-title">Product Performance</h2>
       
       <div className="dashboard-card overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead>
-              <tr className="border-b border-gray-100">
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Times Recommended</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">CTR (%)</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cross-Sell Uptake (%)</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Dropout Rate (%)</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Avg. Time on Page</th>
-                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Most Paired With</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Product</TableHead>
+                <TableHead className="text-right">Units Sold</TableHead>
+                <TableHead className="text-right">Units Returned</TableHead>
+                <TableHead className="text-right">Net Sales</TableHead>
+                <TableHead className="text-right">Return Rate (%)</TableHead>
+                <TableHead className="text-right">First-Time Return (%)</TableHead>
+                <TableHead className="text-right">Return Lag (Days)</TableHead>
+                <TableHead>Top Reasons</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
               {productData.map((product) => (
-                <tr 
-                  key={product.id} 
-                  className="hover:bg-gray-50 transition-colors"
-                >
-                  <td className="px-4 py-4 whitespace-nowrap">
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium">
                     <div className="flex items-center">
                       <div className="h-8 w-8 flex-shrink-0 rounded-md bg-gray-100 mr-3"></div>
-                      <div className="font-medium text-dashboard-text-heading">{product.name}</div>
+                      {product.name}
                     </div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium">{product.timesRecommended}</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="flex items-center">
-                      <div className="font-medium">{product.ctr}%</div>
-                      <div className={cn(
-                        "ml-2 flex items-center text-xs",
-                        product.trend === 'up' ? "text-green-500" : 
-                        product.trend === 'down' ? "text-red-500" : 
-                        "text-gray-400"
-                      )}>
-                        {product.trend === 'up' && <ArrowUpRight size={12} />}
-                        {product.trend === 'down' && <ArrowDownRight size={12} />}
-                        {product.trend === 'neutral' && <TrendingUp size={12} />}
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium">{product.crossSellUptake}%</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium">{product.dropoutRate}%</div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="flex items-center text-sm">
-                      <Clock size={14} className="mr-1 text-gray-400" />
-                      <span>{product.avgTimeOnPage}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-4 whitespace-nowrap">
-                    <div className="font-medium">{product.mostPairedSku}</div>
-                  </td>
-                </tr>
+                  </TableCell>
+                  <TableCell className="text-right">{product.unitsSold}</TableCell>
+                  <TableCell className="text-right">{product.unitsReturned}</TableCell>
+                  <TableCell className="text-right">{product.netSales}</TableCell>
+                  <TableCell className={cn(
+                    "text-right font-medium",
+                    getPercentageColor(product.returnRate)
+                  )}>
+                    {product.returnRate}%
+                  </TableCell>
+                  <TableCell className={cn(
+                    "text-right font-medium",
+                    getPercentageColor(product.firstTimeReturn)
+                  )}>
+                    {product.firstTimeReturn}%
+                  </TableCell>
+                  <TableCell className="text-right">{product.returnLag}</TableCell>
+                  <TableCell>{product.topReasons}</TableCell>
+                </TableRow>
               ))}
-            </tbody>
-          </table>
+            </TableBody>
+          </Table>
         </div>
       </div>
     </div>
