@@ -37,7 +37,7 @@ const ComparativePanel = ({ comparativeData, aiInsightData }: ComparativePanelPr
   
   return (
     <div className="dashboard-card">
-      <h3 className="dashboard-section-subtitle">Comparative Analysis & AI Insight</h3>
+      <h3 className="dashboard-section-subtitle">Comparative Analysis</h3>
       
       {/* Year-over-Year Comparison Line Graph */}
       <div className="mb-6">

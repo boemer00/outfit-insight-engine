@@ -33,7 +33,7 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
   
   return (
     <div className="dashboard-card">
-      <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis & AI Insight</h3>
+      <h3 className="dashboard-section-subtitle">Feedback Drivers Analysis</h3>
       
       {/* Feedback Trends Area Chart */}
       <div className="mb-6">

@@ -31,47 +31,11 @@ const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
     return null;
   };
   
-  // Custom active shape for pie chart
-  const renderActiveShape = (props: any) => {
-    const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props;
-    
-    return (
-      <g>
-        <path 
-          d={`M${cx},${cy} L${cx},${cy - outerRadius - 10}`} 
-          stroke={fill} 
-          fill="none"
-          strokeWidth={2}
-        />
-        <path
-          d={`
-            M ${cx},${cy}
-            L ${cx + innerRadius * Math.cos(-startAngle * Math.PI / 180)},${cy + innerRadius * Math.sin(-startAngle * Math.PI / 180)}
-            A ${innerRadius},${innerRadius} 0 0 0 ${cx + innerRadius * Math.cos(-endAngle * Math.PI / 180)},${cy + innerRadius * Math.sin(-endAngle * Math.PI / 180)}
-            Z
-          `}
-          fill={fill}
-          stroke={fill}
-        />
-        <path
-          d={`
-            M ${cx + innerRadius * Math.cos(-startAngle * Math.PI / 180)},${cy + innerRadius * Math.sin(-startAngle * Math.PI / 180)}
-            L ${cx + outerRadius * Math.cos(-startAngle * Math.PI / 180)},${cy + outerRadius * Math.sin(-startAngle * Math.PI / 180)}
-            A ${outerRadius},${outerRadius} 0 0 0 ${cx + outerRadius * Math.cos(-endAngle * Math.PI / 180)},${cy + outerRadius * Math.sin(-endAngle * Math.PI / 180)}
-            L ${cx + innerRadius * Math.cos(-endAngle * Math.PI / 180)},${cy + innerRadius * Math.sin(-endAngle * Math.PI / 180)}
-            Z
-          `}
-          fill={fill}
-        />
-      </g>
-    );
-  };
-  
   return (
     <div className="dashboard-card">
-      <h3 className="dashboard-section-subtitle">Sentiment Intelligence & AI Insight</h3>
+      <h3 className="dashboard-section-subtitle">Sentiment Intelligence</h3>
       
-      {/* Overall Sentiment Overview (Compact Pie Chart) */}
+      {/* Donut Chart for Sentiment Distribution */}
       <div className="mb-6">
         <h4 className="text-sm font-medium text-dashboard-text-body mb-2">Overall Sentiment Distribution</h4>
         <div className="h-[180px]">
@@ -81,13 +45,11 @@ const SentimentPanel = ({ sentimentData }: SentimentPanelProps) => {
                 data={sentimentData}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={70}
+                innerRadius={45}
+                outerRadius={75}
                 paddingAngle={2}
                 dataKey="value"
                 animationDuration={1000}
-                activeIndex={0}
-                activeShape={renderActiveShape}
               >
                 {sentimentData.map((entry, index) => (
                   <Cell key={`cell-${index}`} fill={entry.color} />
