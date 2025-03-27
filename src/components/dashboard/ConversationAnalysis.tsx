@@ -68,6 +68,25 @@ const ConversationAnalysis = () => {
     suggestion: 'Revise material descriptions and enhance quality control.'
   };
   
+  // Custom tooltip for pie chart with percentages
+  const CustomPieTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      const totalValue = sentimentData.reduce((acc, item) => acc + item.value, 0);
+      const percentage = Math.round((data.value / totalValue) * 100);
+      
+      return (
+        <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
+          <p className="text-sm font-medium">{data.name}</p>
+          <p className="text-sm text-gray-700">
+            {data.value} ({percentage}%)
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
+  
   // Custom tooltip for area chart
   const CustomAreaTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
@@ -179,23 +198,7 @@ const ConversationAnalysis = () => {
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
-                        const data = payload[0].payload;
-                        const totalValue = sentimentData.reduce((acc, item) => acc + item.value, 0);
-                        return (
-                          <div className="bg-white p-2 rounded-md shadow-md border border-gray-100">
-                            <p className="text-sm font-medium">{data.name}</p>
-                            <p className="text-sm text-gray-700">
-                              {data.value} ({Math.round((data.value / totalValue) * 100)}%)
-                            </p>
-                          </div>
-                        );
-                      }
-                      return null;
-                    }}
-                  />
+                  <Tooltip content={<CustomPieTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
             </div>
@@ -252,6 +255,7 @@ const ConversationAnalysis = () => {
                     stackId="1" 
                     stroke="#4A90E2" 
                     fill="#4A90E2" 
+                    strokeWidth={1.5}
                   />
                   <Area 
                     type="monotone" 
@@ -259,6 +263,7 @@ const ConversationAnalysis = () => {
                     stackId="1" 
                     stroke="#4CAF50" 
                     fill="#4CAF50" 
+                    strokeWidth={1.5}
                   />
                   <Area 
                     type="monotone" 
@@ -266,6 +271,7 @@ const ConversationAnalysis = () => {
                     stackId="1" 
                     stroke="#7B61FF" 
                     fill="#7B61FF" 
+                    strokeWidth={1.5}
                   />
                   <Area 
                     type="monotone" 
@@ -273,6 +279,8 @@ const ConversationAnalysis = () => {
                     stackId="1" 
                     stroke="#FFB74D" 
                     fill="#FFB74D" 
+                    strokeWidth={1.5}
+                    fillOpacity={0.9}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -341,7 +349,7 @@ const ConversationAnalysis = () => {
                     type="monotone" 
                     dataKey="2025" 
                     stroke="#4A90E2" 
-                    strokeWidth={2} 
+                    strokeWidth={2.5} 
                     dot={{ r: 3 }} 
                     activeDot={{ r: 5 }}
                     name="2025"
@@ -367,7 +375,7 @@ const ConversationAnalysis = () => {
                 <span className="text-dashboard-text-body text-xs">2025</span>
               </div>
               <div className="flex items-center text-sm">
-                <div className="w-8 h-0.5 mr-2 bg-[#BBDEFB] border-0 border-dashed border-b-[#BBDEFB]" style={{ borderBottomWidth: '1px', borderStyle: 'dashed' }} />
+                <div className="w-8 h-0.5 mr-2 bg-[#BBDEFB]" style={{ borderBottomWidth: '1px', borderStyle: 'dashed' }} />
                 <span className="text-dashboard-text-body text-xs">2024</span>
               </div>
             </div>
@@ -379,7 +387,7 @@ const ConversationAnalysis = () => {
               <div>
                 <div className="flex justify-between items-center mb-1">
                   <span className="text-sm font-medium text-[#4A4A4A]">{aiInsightData.product}</span>
-                  <span className="text-xs bg-[#FFDEE2] text-[#F44336] px-2 py-0.5 rounded">
+                  <span className="text-xs bg-[#FFDEE2] text-[#F44336] px-2 py-0.5 rounded opacity-85">
                     {aiInsightData.rate} Returns
                   </span>
                 </div>
