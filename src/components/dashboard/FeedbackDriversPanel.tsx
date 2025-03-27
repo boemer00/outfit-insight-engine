@@ -8,17 +8,15 @@ interface FeedbackDriversPanelProps {
     month: string;
     'Size Issue': number;
     'Quality Issue': number;
-    'Comfort Issue': number;
     'Color Mismatch': number;
   }>;
 }
 
 const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps) => {
-  // Updated softer color palette
+  // Updated softer color palette with Comfort Issue removed
   const colorPalette = {
     'Size Issue': '#7EC8E3',    // Light Blue
     'Quality Issue': '#80C784', // Soft Green
-    'Comfort Issue': '#B39DDB', // Soft Purple
     'Color Mismatch': '#FFD54F' // Warm Yellow
   };
   
@@ -82,12 +80,6 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
                 radius={[2, 2, 0, 0]}
               />
               <Bar 
-                dataKey="Comfort Issue" 
-                fill={colorPalette['Comfort Issue']} 
-                barSize={10}
-                radius={[2, 2, 0, 0]}
-              />
-              <Bar 
                 dataKey="Color Mismatch" 
                 fill={colorPalette['Color Mismatch']} 
                 barSize={10}
@@ -97,7 +89,7 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
           </ResponsiveContainer>
         </div>
         
-        {/* Legend with updated colors */}
+        {/* Legend with updated colors - Comfort Issue removed */}
         <div className="mt-4 mb-6 flex flex-wrap gap-4 text-xs justify-center">
           {Object.entries(colorPalette).map(([key, color]) => (
             <div key={key} className="flex items-center">
@@ -108,7 +100,7 @@ const FeedbackDriversPanel = ({ feedbackTrendsData }: FeedbackDriversPanelProps)
         </div>
       </div>
       
-      {/* AI Insight Box */}
+      {/* AI Insight Box - properly aligned */}
       <AIInsightBox 
         insights={
           <div>
