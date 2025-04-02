@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +10,6 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Cell
 } from 'recharts';
 
-// Define message types
 interface Message {
   id: string;
   content: string;
@@ -20,7 +18,6 @@ interface Message {
   graph?: GraphData | null;
 }
 
-// Graph data type
 interface GraphData {
   id: string;
   title: string;
@@ -37,7 +34,6 @@ interface GraphData {
   createdAt: Date;
 }
 
-// Sample responses for simulated AI
 const sampleResponses = [
   {
     query: "Are there any products with high return rates this week?",
@@ -53,14 +49,12 @@ const sampleResponses = [
   }
 ];
 
-// Keywords that indicate graph generation requests
 const graphKeywords = [
   'show me', 'graph', 'chart', 'visualize', 'visualization', 'plot',
   'display', 'trend', 'compare', 'comparison', 'over time', 'return rate',
   'sales'
 ];
 
-// Sample graph data for demonstration
 const sampleGraphs = {
   returnRates: {
     id: uuidv4(),
@@ -124,15 +118,10 @@ const sampleGraphs = {
   }
 };
 
-// Function to get a simulated response with potential graph data
 const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData | null }> => {
-  // Convert query to lowercase for easier matching
   const lowerQuery = query.toLowerCase().trim();
-
-  // Check if query seems to be asking for a visualization
   const shouldGenerateGraph = graphKeywords.some(keyword => lowerQuery.includes(keyword.toLowerCase()));
 
-  // Look for an exact match in our sample responses
   const exactMatch = sampleResponses.find(item =>
     item.query.toLowerCase() === lowerQuery
   );
@@ -143,11 +132,10 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
   if (exactMatch) {
     responseText = exactMatch.response;
   }
-  // Handle graph generation requests
   else if (shouldGenerateGraph) {
     if (lowerQuery.includes('polo') && (lowerQuery.includes('return') || lowerQuery.includes('rate'))) {
       graphData = { ...sampleGraphs.returnRates, query };
-      responseText = "Here's a visualization of return rates for polo shirts over the last 7 days. The highest return rate was on Wednesday at 6.1%.";
+      responseText = "Here's a visualization of return rates for polo shirts over the last 7 days. The highest return rate was on Wednesday at 6.1%";
     }
     else if (lowerQuery.includes('category') || lowerQuery.includes('distribution')) {
       graphData = { ...sampleGraphs.salesByCategory, query };
@@ -161,7 +149,6 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
       responseText = "I understand you're looking for a visualization, but I need more specific information. Try asking about return rates, sales by category, or sales trends for specific products.";
     }
   }
-  // Look for keyword matches if no exact match
   else if (lowerQuery.includes("jeans") || lowerQuery.includes("product") || lowerQuery.includes("offer")) {
     responseText = sampleResponses[0].response;
   }
@@ -178,18 +165,16 @@ const getAIResponse = (query: string): Promise<{ text: string; graph: GraphData 
     responseText = sampleResponses[4].response;
   }
   else {
-    // Default response if no match
     responseText = "I don't have specific data on that query. Try asking about product requests, engagement metrics, conversion rates, or common customer questions. You can also ask me to visualize data like 'Show me return rates for polo shirts'.";
   }
 
   return new Promise(resolve => {
     setTimeout(() => {
       resolve({ text: responseText, graph: graphData });
-    }, 1200); // Simulate API delay
+    }, 1200);
   });
 };
 
-// Component to render the appropriate chart type
 const GraphRenderer = ({ graph }: { graph: GraphData }) => {
   if (!graph) return null;
 
@@ -280,10 +265,8 @@ const ChatBot = () => {
   const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Add chat transcript functionality
   const { sessionId, saveChat, isLoading, error } = useChatTranscript();
 
-  // Show error toast if transcript saving fails
   useEffect(() => {
     if (error) {
       toast.error("Failed to save chat transcript", {
@@ -292,7 +275,6 @@ const ChatBot = () => {
     }
   }, [error]);
 
-  // Auto scroll to bottom of messages
   useEffect(() => {
     if (messagesEndRef.current) {
       messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -302,7 +284,6 @@ const ChatBot = () => {
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return;
 
-    // Add user message
     const userMessage: Message = {
       id: Date.now().toString(),
       content: inputValue,
@@ -315,10 +296,8 @@ const ChatBot = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Get AI response
     const { text: response, graph } = await getAIResponse(inputValue);
 
-    // Add AI response message
     const botMessage: Message = {
       id: (Date.now() + 1).toString(),
       content: response,
@@ -330,7 +309,6 @@ const ChatBot = () => {
     setMessages(prev => [...prev, botMessage]);
     setIsTyping(false);
 
-    // Save the conversation to the database
     const fullTranscript = `User: ${inputValue}\nAI: ${response}`;
     saveChat(fullTranscript, {
       user_query: inputValue,
@@ -349,14 +327,9 @@ const ChatBot = () => {
   };
 
   const handlePinGraph = (graph: GraphData) => {
-    // In a real app, this would save to Supabase or another backend
-    setPinnedGraphs(prev => [...prev, graph]);
-
-    // Save to localStorage as fallback/demo
-    const storedGraphs = localStorage.getItem('pinnedGraphs');
-    const parsedGraphs = storedGraphs ? JSON.parse(storedGraphs) : [];
-    localStorage.setItem('pinnedGraphs', JSON.stringify([...parsedGraphs, graph]));
-
+    const pinEvent = new CustomEvent('graph-pinned', { detail: graph });
+    window.dispatchEvent(pinEvent);
+    
     toast.success('Graph pinned to dashboard', {
       description: 'You can view it in the "Generate & Pin" tab'
     });
@@ -370,7 +343,6 @@ const ChatBot = () => {
 
   return (
     <>
-      {/* Chat toggle button */}
       <div className="fixed bottom-6 right-6 z-50">
         <Button
           onClick={() => setIsOpen(prev => !prev)}
@@ -380,7 +352,6 @@ const ChatBot = () => {
         </Button>
       </div>
 
-      {/* Chat window */}
       {isOpen && (
         <div className="fixed bottom-24 right-6 w-96 lg:w-[450px] h-[600px] bg-white dark:bg-gray-900 rounded-xl shadow-xl border border-gray-200 dark:border-gray-800 flex flex-col z-40 overflow-hidden animate-in slide-in-from-bottom">
           <div className="bg-primary p-3 text-white flex items-center justify-between">
@@ -400,7 +371,6 @@ const ChatBot = () => {
             </Button>
           </div>
 
-          {/* Messages area */}
           <div className="flex-1 p-4 overflow-y-auto">
             {messages.map((message) => (
               <div
@@ -416,7 +386,6 @@ const ChatBot = () => {
                 >
                   {message.content}
 
-                  {/* Render graph if available */}
                   {message.graph && (
                     <div className="mt-3">
                       <div className="mb-2 flex justify-between items-center">
@@ -454,24 +423,20 @@ const ChatBot = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Suggestion chips */}
-          {messages.length <= 2 && (
-            <div className="px-4 py-2 flex flex-wrap gap-2">
-              {suggestionPrompts.map((prompt, index) => (
-                <button
-                  key={index}
-                  className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 py-1 px-3 rounded-full transition-colors"
-                  onClick={() => {
-                    setInputValue(prompt);
-                  }}
-                >
-                  {prompt}
-                </button>
-              ))}
-            </div>
-          )}
+          <div className="px-4 py-2 flex flex-wrap gap-2">
+            {suggestionPrompts.map((prompt, index) => (
+              <button
+                key={index}
+                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-800 py-1 px-3 rounded-full transition-colors"
+                onClick={() => {
+                  setInputValue(prompt);
+                }}
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
 
-          {/* Input area */}
           <div className="p-3 border-t border-gray-200 dark:border-gray-800 flex items-end gap-2">
             <Textarea
               value={inputValue}

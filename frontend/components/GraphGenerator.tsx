@@ -9,7 +9,6 @@ import { PlusCircle, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase } from '@/integrations/supabase/client';
 
 // Types for our graphs
 interface GraphData {
@@ -31,79 +30,9 @@ interface GraphData {
 const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8', '#82ca9d'];
 
 const GraphGenerator = () => {
+  // Initialize with empty array - no graphs by default
   const [pinnedGraphs, setPinnedGraphs] = useState<GraphData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  // Load pinned graphs on component mount
-  useEffect(() => {
-    const loadPinnedGraphs = async () => {
-      setIsLoading(true);
-      try {
-        // This is a mock implementation - in a real app, you'd fetch from an API
-        // You can implement the actual Supabase fetching here when ready
-
-        // Mock data for demo purposes
-        const mockPinnedGraphs: GraphData[] = [
-          {
-            id: '1',
-            title: 'Return Rates for Polo Shirts',
-            description: 'Return rates for polo shirts over the last 7 days',
-            type: 'bar',
-            data: [
-              { day: 'Mon', rate: 5.2 },
-              { day: 'Tue', rate: 4.8 },
-              { day: 'Wed', rate: 6.1 },
-              { day: 'Thu', rate: 5.7 },
-              { day: 'Fri', rate: 4.9 },
-              { day: 'Sat', rate: 3.8 },
-              { day: 'Sun', rate: 3.2 },
-            ],
-            config: {
-              xKey: 'day',
-              yKey: 'rate',
-              colors: [COLORS[0]]
-            },
-            query: 'Show me the return rates for polo shirts over the last 7 days',
-            createdAt: new Date()
-          },
-          {
-            id: '2',
-            title: 'Returns by Category',
-            description: 'Distribution of returns across product categories',
-            type: 'pie',
-            data: [
-              { name: 'Shirts', value: 35 },
-              { name: 'Trousers', value: 25 },
-              { name: 'Hoodies', value: 20 },
-              { name: 'Polo Shirts', value: 15 },
-              { name: 'Jackets', value: 5 },
-            ],
-            config: {
-              dataKey: 'value',
-              colors: COLORS
-            },
-            query: 'Show me returns by product category',
-            createdAt: new Date()
-          }
-        ];
-
-        setPinnedGraphs(mockPinnedGraphs);
-      } catch (error) {
-        console.error('Error loading pinned graphs:', error);
-        toast.error('Failed to load pinned graphs');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    loadPinnedGraphs();
-  }, []);
-
-  const handleRemoveGraph = (id: string) => {
-    // In a real app, you'd also remove it from the database
-    setPinnedGraphs(prev => prev.filter(graph => graph.id !== id));
-    toast.success('Graph removed successfully');
-  };
 
   // Function to render the appropriate chart type
   const renderGraph = (graph: GraphData) => {
@@ -172,6 +101,29 @@ const GraphGenerator = () => {
     }
   };
 
+  // Setup event listener for pinned graphs from ChatBot
+  useEffect(() => {
+    // Define event handler for pinned graphs
+    const handlePinnedGraph = (event: CustomEvent<GraphData>) => {
+      const newGraph = event.detail;
+      setPinnedGraphs(prev => [...prev, newGraph]);
+      toast.success('Graph pinned to dashboard');
+    };
+
+    // Add event listener for custom event
+    window.addEventListener('graph-pinned', handlePinnedGraph as EventListener);
+
+    // Cleanup event listener on unmount
+    return () => {
+      window.removeEventListener('graph-pinned', handlePinnedGraph as EventListener);
+    };
+  }, []);
+
+  const handleRemoveGraph = (id: string) => {
+    setPinnedGraphs(prev => prev.filter(graph => graph.id !== id));
+    toast.success('Graph removed successfully');
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -187,11 +139,6 @@ const GraphGenerator = () => {
       </div>
 
       <div className="flex flex-col gap-6">
-        {/* <p className="text-dashboard-text-body">
-          Ask the AI assistant questions like <span className="font-medium">"Show me return rates for polo shirts over the last 7 days"</span> to
-          generate graphs. When a graph is generated, you can pin it to this dashboard.
-        </p> */}
-
         {pinnedGraphs.length === 0 ? (
           <Card className="border-dashed border-2 p-6">
             <div className="flex flex-col items-center justify-center py-12 text-center">
